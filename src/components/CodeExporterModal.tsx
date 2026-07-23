@@ -46,7 +46,7 @@ export const CodeExporterModal: React.FC<Props> = ({
     } catch (e) {
       return JSON.stringify(
         {
-          error: 'JSON export feature in @unlayer/react-elements requires static JSX tree structure.',
+          error: 'Unlayer JSON schema generation requires static component tree.',
           details: String(e),
         },
         null,
@@ -95,57 +95,54 @@ export const CodeExporterModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <div className="modal-title-group">
-            <Code2 size={20} className="icon-purple" />
-            <h2>Export Code &amp; Templates</h2>
-            <span className="modal-badge">{template.name}</span>
-          </div>
-
-          <button className="btn-close" onClick={onClose}>
-            <X size={18} />
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-head">
+          <h2>
+            <Code2 size={22} color="#8b5cf6" /> Export Center — {template.name}
+          </h2>
+          <button className="close-btn" onClick={onClose}>
+            <X size={20} />
           </button>
         </div>
 
         {/* Tab Controls */}
-        <div className="modal-tabs">
+        <div className="modal-nav-tabs">
           <button
-            className={`tab-item ${activeTab === 'html' ? 'active' : ''}`}
+            className={`nav-tab-item ${activeTab === 'html' ? 'active' : ''}`}
             onClick={() => setActiveTab('html')}
           >
-            <FileCode size={14} /> Compiled HTML
+            <FileCode size={15} /> Compiled HTML
           </button>
           <button
-            className={`tab-item ${activeTab === 'jsx' ? 'active' : ''}`}
+            className={`nav-tab-item ${activeTab === 'jsx' ? 'active' : ''}`}
             onClick={() => setActiveTab('jsx')}
           >
-            <Code2 size={14} /> React JSX
+            <Code2 size={15} /> React Source JSX
           </button>
           <button
-            className={`tab-item ${activeTab === 'json' ? 'active' : ''}`}
+            className={`nav-tab-item ${activeTab === 'json' ? 'active' : ''}`}
             onClick={() => setActiveTab('json')}
           >
-            <Braces size={14} /> Unlayer JSON
+            <Braces size={15} /> Unlayer JSON
           </button>
           <button
-            className={`tab-item ${activeTab === 'text' ? 'active' : ''}`}
+            className={`nav-tab-item ${activeTab === 'text' ? 'active' : ''}`}
             onClick={() => setActiveTab('text')}
           >
-            <AlignLeft size={14} /> Plain Text MIME
+            <AlignLeft size={15} /> Plain Text MIME
           </button>
         </div>
 
-        {/* Code Content View */}
-        <div className="code-viewer-container">
-          <pre className="code-block">
+        {/* Code Viewport */}
+        <div className="modal-code-area">
+          <pre className="code-pre">
             <code>{getCurrentCode()}</code>
           </pre>
         </div>
 
-        {/* Actions Footer */}
-        <div className="modal-footer">
+        {/* Footer Actions */}
+        <div className="modal-foot">
           <div className="footer-info">
             {activeTab === 'html' && 'Email-safe XHTML table output compatible with Outlook, Gmail, & SendGrid.'}
             {activeTab === 'jsx' && 'Pure React source component using @unlayer/react-elements.'}
@@ -153,13 +150,13 @@ export const CodeExporterModal: React.FC<Props> = ({
             {activeTab === 'text' && 'Clean plain text fallback MIME part.'}
           </div>
 
-          <div className="footer-buttons">
-            <button className="btn-secondary" onClick={handleDownload}>
-              <Download size={14} /> Download File
+          <div className="action-btns">
+            <button className="btn-secondary-act" onClick={handleDownload}>
+              <Download size={15} /> Download File
             </button>
-            <button className="btn-primary" onClick={handleCopy}>
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-              {copied ? 'Copied to Clipboard!' : 'Copy to Clipboard'}
+            <button className="btn-primary-act" onClick={handleCopy}>
+              {copied ? <Check size={15} /> : <Copy size={15} />}
+              {copied ? 'Copied to Clipboard!' : 'Copy Code'}
             </button>
           </div>
         </div>

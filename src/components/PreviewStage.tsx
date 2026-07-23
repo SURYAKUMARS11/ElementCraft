@@ -1,13 +1,15 @@
 import React from 'react';
 import { renderToHtml } from '@unlayer/react-elements';
 import type { TemplateDefinition, TemplateCustomization, RenderMode, DeviceFrame } from '../types/template';
-import { Monitor, Smartphone, Mail, Globe, Printer, ShieldCheck } from 'lucide-react';
+import { Monitor, Smartphone, Mail, Globe, Printer, Columns3, CheckCircle } from 'lucide-react';
+
+export type StageViewMode = RenderMode | 'compare';
 
 interface Props {
   template: TemplateDefinition;
   customization: TemplateCustomization;
-  renderMode: RenderMode;
-  onRenderModeChange: (mode: RenderMode) => void;
+  stageMode: StageViewMode;
+  onStageModeChange: (mode: StageViewMode) => void;
   deviceFrame: DeviceFrame;
   onDeviceFrameChange: (frame: DeviceFrame) => void;
 }
@@ -15,109 +17,167 @@ interface Props {
 export const PreviewStage: React.FC<Props> = ({
   template,
   customization,
-  renderMode,
-  onRenderModeChange,
+  stageMode,
+  onStageModeChange,
   deviceFrame,
   onDeviceFrameChange,
 }) => {
   const Component = template.component;
 
-  // Generate complete standalone HTML string using @unlayer/react-elements
-  const renderedHtml = React.useMemo(() => {
+  // Generate HTML for a specific mode
+  const getRenderedHtmlForMode = (mode: RenderMode) => {
     try {
-      return renderToHtml(<Component config={customization} mode={renderMode} />, {
+      return renderToHtml(<Component config={customization} mode={mode} />, {
         title: `${template.name} - Built with Elements`,
-        mode: renderMode,
+        mode: mode,
       });
     } catch (err) {
-      console.error('Error rendering HTML:', err);
       return `<div style="padding:20px;color:red;">Error rendering template: ${String(err)}</div>`;
     }
-  }, [template, customization, renderMode]);
+  };
+
+  const isCompare = stageMode === 'compare';
 
   return (
-    <main className="preview-stage">
+    <main className="preview-canvas-stage">
       {/* Top Toolbar */}
-      <div className="stage-toolbar">
-        {/* Render Mode Switch */}
-        <div className="mode-segmented-control">
+      <div className="canvas-toolbar">
+        {/* Renderers Selector */}
+        <div className="renderer-tab-group">
           <button
-            className={`segment-btn ${renderMode === 'email' ? 'active' : ''}`}
-            onClick={() => onRenderModeChange('email')}
+            className={`ren-tab-btn ${stageMode === 'web' ? 'active' : ''}`}
+            onClick={() => onStageModeChange('web')}
+          >
+            <Globe size={14} /> Web Page
+          </button>
+          <button
+            className={`ren-tab-btn ${stageMode === 'email' ? 'active' : ''}`}
+            onClick={() => onStageModeChange('email')}
           >
             <Mail size={14} /> Email HTML
           </button>
           <button
-            className={`segment-btn ${renderMode === 'web' ? 'active' : ''}`}
-            onClick={() => onRenderModeChange('web')}
+            className={`ren-tab-btn ${stageMode === 'document' ? 'active' : ''}`}
+            onClick={() => onStageModeChange('document')}
           >
-            <Globe size={14} /> Responsive Web
+            <Printer size={14} /> PDF Document
           </button>
           <button
-            className={`segment-btn ${renderMode === 'document' ? 'active' : ''}`}
-            onClick={() => onRenderModeChange('document')}
+            className={`ren-tab-btn ${isCompare ? 'compare-active' : ''}`}
+            onClick={() => onStageModeChange('compare')}
           >
-            <Printer size={14} /> PDF / Document
+            <Columns3 size={14} /> ⚡ Compare All 3 Renderers Side-By-Side
           </button>
         </div>
 
-        {/* Spec Badge */}
-        <div className="spec-badge">
-          <ShieldCheck size={14} className="icon-green" />
+        {/* Renderer Status Pill */}
+        <div className="renderer-info-pill">
+          <CheckCircle size={14} className="icon-green" />
           <span>
-            {renderMode === 'email' && 'Email Spec • Table Layouts & MSO Comments'}
-            {renderMode === 'web' && 'Web Spec • HTML5 Flexbox/Div Layout'}
-            {renderMode === 'document' && 'Document Spec • Print/PDF Optimizations'}
+            {isCompare
+              ? 'Multi-Renderer Comparison Mode (Web + Email + Document)'
+              : stageMode === 'email'
+              ? 'Email Table Layouts & MSO Comments'
+              : stageMode === 'web'
+              ? 'Responsive Web Flexbox Specs'
+              : 'Print & PDF Document Specs'}
           </span>
         </div>
 
-        {/* Device Frame Switch */}
-        <div className="device-segmented-control">
-          <button
-            className={`device-btn ${deviceFrame === 'desktop' ? 'active' : ''}`}
-            onClick={() => onDeviceFrameChange('desktop')}
-            title="Desktop View"
-          >
-            <Monitor size={15} />
-          </button>
-          <button
-            className={`device-btn ${deviceFrame === 'mobile' ? 'active' : ''}`}
-            onClick={() => onDeviceFrameChange('mobile')}
-            title="Mobile View"
-          >
-            <Smartphone size={15} />
-          </button>
-        </div>
+        {/* Device Frame Toggle (Hidden in compare mode) */}
+        {!isCompare && (
+          <div className="device-frame-group">
+            <button
+              className={`dev-btn ${deviceFrame === 'desktop' ? 'active' : ''}`}
+              onClick={() => onDeviceFrameChange('desktop')}
+              title="Desktop Wide View"
+            >
+              <Monitor size={15} />
+            </button>
+            <button
+              className={`dev-btn ${deviceFrame === 'mobile' ? 'active' : ''}`}
+              onClick={() => onDeviceFrameChange('mobile')}
+              title="Mobile Device View"
+            >
+              <Smartphone size={15} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Frame Container */}
-      <div className={`viewport-container ${deviceFrame}`}>
-        <div className="browser-mockup-bar">
-          <div className="window-dots">
-            <span className="dot red"></span>
-            <span className="dot yellow"></span>
-            <span className="dot green"></span>
-          </div>
-          <div className="url-address-bar">
-            <span>
-              {renderMode === 'email' && `https://mail.google.com/mail/u/0/#inbox/${template.id}`}
-              {renderMode === 'web' && `https://${customization.brandName.toLowerCase().replace(/\s+/g, '')}.com/preview`}
-              {renderMode === 'document' && `file:///documents/receipts/${customization.invoiceNumber || 'DOC-2026'}.pdf`}
-            </span>
-          </div>
-          <div className="frame-size-indicator">
-            {deviceFrame === 'desktop' ? '680px Wide' : '375px Mobile'}
-          </div>
-        </div>
+      {/* Canvas Viewport Scroll Area */}
+      <div className="canvas-viewport-scroll">
+        {isCompare ? (
+          /* Compare 3 Renderers Side-By-Side Grid */
+          <div className="compare-renderers-grid">
+            {/* Column 1: Web Page */}
+            <div className="compare-column">
+              <div className="compare-header">
+                <h3><Globe size={15} /> 🌐 Web Page Renderer</h3>
+                <span className="cat-pill email">Web Spec</span>
+              </div>
+              <iframe
+                srcDoc={getRenderedHtmlForMode('web')}
+                title="Web Renderer Preview"
+                className="compare-iframe"
+                sandbox="allow-popups allow-same-origin"
+              />
+            </div>
 
-        {/* Live Iframe displaying rendered HTML */}
-        <iframe
-          key={`${template.id}-${renderMode}-${customization.darkMode}-${customization.primaryColor}`}
-          srcDoc={renderedHtml}
-          title="Rendered Template View"
-          className="stage-iframe"
-          sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"
-        />
+            {/* Column 2: Email */}
+            <div className="compare-column">
+              <div className="compare-header">
+                <h3><Mail size={15} /> 📧 Email Renderer</h3>
+                <span className="cat-pill email">Table Spec</span>
+              </div>
+              <iframe
+                srcDoc={getRenderedHtmlForMode('email')}
+                title="Email Renderer Preview"
+                className="compare-iframe"
+                sandbox="allow-popups allow-same-origin"
+              />
+            </div>
+
+            {/* Column 3: Document */}
+            <div className="compare-column">
+              <div className="compare-header">
+                <h3><Printer size={15} /> 📄 Document Renderer</h3>
+                <span className="cat-pill document">PDF Print Spec</span>
+              </div>
+              <iframe
+                srcDoc={getRenderedHtmlForMode('document')}
+                title="Document Renderer Preview"
+                className="compare-iframe"
+                sandbox="allow-popups allow-same-origin"
+              />
+            </div>
+          </div>
+        ) : (
+          /* Single Browser Mockup Stage */
+          <div className={`single-viewport-container ${deviceFrame}`}>
+            <div className="browser-window-header">
+              <div className="window-controls">
+                <span className="win-dot red"></span>
+                <span className="win-dot yellow"></span>
+                <span className="win-dot green"></span>
+              </div>
+              <div className="browser-url-field">
+                https://elementcraft-studio.local/renderers/{stageMode}
+              </div>
+              <div className="view-dimension">
+                {deviceFrame === 'desktop' ? '820px Desktop' : '400px Mobile'}
+              </div>
+            </div>
+
+            <iframe
+              key={`${template.id}-${stageMode}-${customization.darkMode}-${customization.primaryColor}`}
+              srcDoc={getRenderedHtmlForMode(stageMode as RenderMode)}
+              title="Rendered Template Stage"
+              className="single-stage-iframe"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+            />
+          </div>
+        )}
       </div>
     </main>
   );

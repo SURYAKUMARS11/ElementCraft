@@ -1,6 +1,6 @@
 import React from 'react';
 import type { TemplateCustomization } from '../types/template';
-import { Palette, User, Settings, Moon, Sun, RotateCcw } from 'lucide-react';
+import { Palette, User, Sliders, Moon, Sun, RotateCcw, Layout } from 'lucide-react';
 
 interface Props {
   customization: TemplateCustomization;
@@ -18,197 +18,199 @@ export const CustomizerSidebar: React.FC<Props> = ({
   };
 
   return (
-    <aside className="customizer-sidebar">
-      <div className="sidebar-header">
+    <aside className="editor-sidebar">
+      <div className="sidebar-title-bar">
         <h2>
-          <Settings size={18} /> Customize Template
+          <Sliders size={18} /> Template Workspace Editor
         </h2>
-        <button className="btn-reset" onClick={onReset} title="Reset to default props">
+        <button className="reset-link" onClick={onReset} title="Reset default parameters">
           <RotateCcw size={14} /> Reset
         </button>
       </div>
 
-      <div className="sidebar-scroll">
-        {/* Theme & Palette Section */}
-        <div className="control-group">
-          <h3 className="group-title">
-            <Palette size={15} /> Design Theme
+      <div className="sidebar-body">
+        {/* Color & Aesthetic Theme Section */}
+        <div className="editor-section">
+          <h3 className="editor-section-title">
+            <Palette size={15} /> Color Palette &amp; Theme
           </h3>
-          
-          <div className="form-row">
-            <label className="form-label">Dark Mode Frame</label>
+
+          <div className="input-field">
+            <label className="input-label">Template Dark Frame</label>
             <button
               className={`toggle-btn ${customization.darkMode ? 'active' : ''}`}
               onClick={() => update('darkMode', !customization.darkMode)}
             >
               {customization.darkMode ? <Moon size={14} /> : <Sun size={14} />}
-              {customization.darkMode ? 'Dark Theme' : 'Light Theme'}
+              {customization.darkMode ? 'Dark Frame Enabled' : 'Light Frame Enabled'}
             </button>
           </div>
 
-          <div className="form-row">
-            <label className="form-label">Primary Color</label>
-            <div className="color-picker-row">
+          <div className="input-field">
+            <label className="input-label">Primary Brand Color</label>
+            <div className="color-input-flex">
               <input
                 type="color"
                 value={customization.primaryColor}
                 onChange={(e) => update('primaryColor', e.target.value)}
-                className="color-picker"
+                className="color-swatch"
               />
               <input
                 type="text"
                 value={customization.primaryColor}
                 onChange={(e) => update('primaryColor', e.target.value)}
-                className="text-input color-text"
+                className="form-control color-hex"
               />
             </div>
           </div>
 
-          <div className="form-row">
-            <label className="form-label">Background Color</label>
-            <div className="color-picker-row">
+          <div className="input-field">
+            <label className="input-label">Background Color</label>
+            <div className="color-input-flex">
               <input
                 type="color"
                 value={customization.backgroundColor || '#ffffff'}
                 onChange={(e) => update('backgroundColor', e.target.value)}
-                className="color-picker"
+                className="color-swatch"
               />
               <input
                 type="text"
                 value={customization.backgroundColor}
                 onChange={(e) => update('backgroundColor', e.target.value)}
-                className="text-input color-text"
+                className="form-control color-hex"
               />
             </div>
           </div>
 
-          <div className="form-row">
-            <label className="form-label">Text Color</label>
-            <div className="color-picker-row">
+          <div className="input-field">
+            <label className="input-label">Text Color</label>
+            <div className="color-input-flex">
               <input
                 type="color"
                 value={customization.textColor || '#1e293b'}
                 onChange={(e) => update('textColor', e.target.value)}
-                className="color-picker"
+                className="color-swatch"
               />
               <input
                 type="text"
                 value={customization.textColor}
                 onChange={(e) => update('textColor', e.target.value)}
-                className="text-input color-text"
+                className="form-control color-hex"
               />
             </div>
           </div>
         </div>
 
-        {/* Brand & Recipient Metadata */}
-        <div className="control-group">
-          <h3 className="group-title">
-            <User size={15} /> Content &amp; Metadata
+        {/* Content & Dynamic Data Fields */}
+        <div className="editor-section">
+          <h3 className="editor-section-title">
+            <User size={15} /> Content &amp; Data Fields
           </h3>
 
-          <div className="form-row">
-            <label className="form-label">Brand Name</label>
+          <div className="input-field">
+            <label className="input-label">Brand / Organization Name</label>
             <input
               type="text"
               value={customization.brandName}
               onChange={(e) => update('brandName', e.target.value)}
-              className="text-input"
-              placeholder="e.g. Acme Corp"
+              className="form-control"
+              placeholder="e.g. Antigravity Cloud"
             />
           </div>
 
-          <div className="form-row">
-            <label className="form-label">Recipient Name</label>
+          <div className="input-field">
+            <label className="input-label">Recipient / Student Name</label>
             <input
               type="text"
               value={customization.recipientName}
               onChange={(e) => update('recipientName', e.target.value)}
-              className="text-input"
-              placeholder="e.g. Alex Mercer"
+              className="form-control"
+              placeholder="e.g. Ibrahim Sunkanmi"
             />
           </div>
 
-          <div className="form-row">
-            <label className="form-label">Company Name</label>
+          <div className="input-field">
+            <label className="input-label">Company / Department</label>
             <input
               type="text"
               value={customization.companyName}
               onChange={(e) => update('companyName', e.target.value)}
-              className="text-input"
-              placeholder="e.g. Apex Tech LLC"
+              className="form-control"
+              placeholder="e.g. Full-Stack Engineering"
             />
           </div>
 
           {customization.invoiceNumber !== undefined && (
-            <div className="form-row">
-              <label className="form-label">Invoice Number</label>
+            <div className="input-field">
+              <label className="input-label">Invoice Number</label>
               <input
                 type="text"
                 value={customization.invoiceNumber}
                 onChange={(e) => update('invoiceNumber', e.target.value)}
-                className="text-input"
+                className="form-control"
               />
             </div>
           )}
 
           {customization.totalAmount !== undefined && (
-            <div className="form-row">
-              <label className="form-label">Total Amount</label>
+            <div className="input-field">
+              <label className="input-label">Total Amount</label>
               <input
                 type="text"
                 value={customization.totalAmount}
                 onChange={(e) => update('totalAmount', e.target.value)}
-                className="text-input"
+                className="form-control"
               />
             </div>
           )}
 
           {customization.eventName !== undefined && (
-            <div className="form-row">
-              <label className="form-label">Event Name</label>
+            <div className="input-field">
+              <label className="input-label">Event / Conference Name</label>
               <input
                 type="text"
                 value={customization.eventName}
                 onChange={(e) => update('eventName', e.target.value)}
-                className="text-input"
+                className="form-control"
               />
             </div>
           )}
         </div>
 
-        {/* Section Toggles */}
-        <div className="control-group">
-          <h3 className="group-title">Layout Blocks</h3>
+        {/* Layout Block Switches */}
+        <div className="editor-section">
+          <h3 className="editor-section-title">
+            <Layout size={15} /> Visible Layout Components
+          </h3>
 
-          <div className="checkbox-row">
+          <div className="switch-control">
+            <label htmlFor="chk-cta">Call-to-Action Button</label>
             <input
               type="checkbox"
               id="chk-cta"
               checked={customization.showCTA}
               onChange={(e) => update('showCTA', e.target.checked)}
             />
-            <label htmlFor="chk-cta">Show Call-to-Action Button</label>
           </div>
 
-          <div className="checkbox-row">
+          <div className="switch-control">
+            <label htmlFor="chk-socials">Social Media Badges</label>
             <input
               type="checkbox"
               id="chk-socials"
               checked={customization.showSocials}
               onChange={(e) => update('showSocials', e.target.checked)}
             />
-            <label htmlFor="chk-socials">Show Social Icons</label>
           </div>
 
-          <div className="checkbox-row">
+          <div className="switch-control">
+            <label htmlFor="chk-footer">Footer Legal Bar</label>
             <input
               type="checkbox"
               id="chk-footer"
               checked={customization.showFooter}
               onChange={(e) => update('showFooter', e.target.checked)}
             />
-            <label htmlFor="chk-footer">Show Footer Bar</label>
           </div>
         </div>
       </div>

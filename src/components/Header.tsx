@@ -1,20 +1,22 @@
 import React from 'react';
-import { Sparkles, ExternalLink, Award, FileCode2, Code } from 'lucide-react';
+import { Sparkles, ExternalLink, Award, FileCode2, Code, Sun, Moon } from 'lucide-react';
 
 interface Props {
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
   onOpenExporter: () => void;
 }
 
-export const Header: React.FC<Props> = ({ onOpenExporter }) => {
+export const Header: React.FC<Props> = ({ theme, onToggleTheme, onOpenExporter }) => {
   return (
     <header className="studio-header">
       <div className="header-brand">
-        <div className="brand-icon">
-          <Sparkles className="icon-glow" size={22} />
+        <div className="brand-icon-wrapper">
+          <Sparkles size={22} />
         </div>
-        <div className="brand-text">
-          <h1>
-            ElementCraft <span className="badge-pill">Studio</span>
+        <div>
+          <h1 className="brand-title">
+            ElementCraft <span className="brand-tag">Studio 2.0</span>
           </h1>
           <p className="brand-subtitle">
             Powered by <strong>@unlayer/react-elements</strong>
@@ -22,16 +24,21 @@ export const Header: React.FC<Props> = ({ onOpenExporter }) => {
         </div>
       </div>
 
-      <div className="challenge-banner">
-        <Award size={16} className="trophy-icon" />
-        <span>Build with Elements Challenge Submission</span>
-        <span className="deadline-badge">July 31, 2026</span>
+      <div className="header-center">
+        <Award size={16} className="trophy-gold" />
+        <span>Build with Elements Challenge</span>
+        <span className="deadline-pill">July 31, 2026</span>
       </div>
 
       <div className="header-actions">
-        <button className="btn-export-main" onClick={onOpenExporter}>
+        <button className="theme-toggle-btn" onClick={onToggleTheme}>
+          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Studio'}</span>
+        </button>
+
+        <button className="btn-export-trigger" onClick={onOpenExporter}>
           <FileCode2 size={18} />
-          <span>Export HTML &amp; Code</span>
+          <span>Export Center</span>
         </button>
 
         <a
@@ -39,7 +46,7 @@ export const Header: React.FC<Props> = ({ onOpenExporter }) => {
           target="_blank"
           rel="noreferrer"
           className="btn-icon-link"
-          title="Unlayer Elements GitHub Repository"
+          title="Unlayer Elements Repository"
         >
           <Code size={18} />
         </a>
