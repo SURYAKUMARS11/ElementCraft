@@ -27,6 +27,7 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
   const textColor = isDark ? '#f9fafb' : config.textColor || '#111827';
   const textMuted = isDark ? '#9ca3af' : '#4b5563';
   const primaryColor = config.primaryColor || '#ec4899';
+  const brandName = config.brandName || 'Frontend Pulse';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="620px" mode={mode}>
@@ -34,7 +35,7 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
       <Row padding="24px 0 12px 0">
         <Column>
           <Paragraph color={primaryColor} fontSize="13px" fontWeight="bold" letterSpacing="2px" textAlign="center">
-            {config.brandName.toUpperCase()} • WEEKLY TECH PULSE
+            {brandName.toUpperCase()} • WEEKLY TECH PULSE
           </Paragraph>
           <Heading level="h1" color={textColor} fontSize="32px" fontWeight="bold" textAlign="center">
             The Frontend Digest
@@ -155,7 +156,7 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
               />
             )}
             <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="12px 0 0 0">
-              Curated with ⚡ by {config.brandName} • Built with Unlayer Elements
+              Curated with ⚡ by {brandName} • Built with Unlayer Elements
             </Paragraph>
           </Column>
         </Row>
@@ -171,7 +172,7 @@ export const Newsletter = () => (
   <Email backgroundColor="${config.backgroundColor || '#f3f4f6'}" contentWidth="620px">
     <Row padding="24px 0">
       <Column textAlign="center">
-        <Heading level="h1">${config.brandName} Tech Digest</Heading>
+        <Heading level="h1">${config.brandName || 'Digest'} Tech Digest</Heading>
         <Paragraph>Issue #${config.issueNumber || '42'}</Paragraph>
       </Column>
     </Row>

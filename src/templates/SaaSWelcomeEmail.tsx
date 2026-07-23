@@ -27,6 +27,9 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
   const textColor = isDark ? '#f8fafc' : config.textColor || '#1e293b';
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#6366f1';
+  const brandName = config.brandName || 'Antigravity SaaS';
+  const recipientName = config.recipientName || 'Developer';
+  const companyName = config.companyName || brandName;
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
@@ -36,7 +39,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
           {config.logoUrl && (
             <Image
               src={config.logoUrl}
-              alt={config.brandName}
+              alt={brandName}
               width="140px"
             />
           )}
@@ -65,7 +68,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
             textAlign="center"
             letterSpacing="1px"
           >
-            🚀 WELCOME TO {config.brandName.toUpperCase()}
+            🚀 WELCOME TO {brandName.toUpperCase()}
           </Heading>
 
           {/* Main Title */}
@@ -78,7 +81,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
             lineHeight="1.2"
             containerPadding="16px 0 12px 0"
           >
-            Welcome aboard, {config.recipientName || 'Developer'}!
+            Welcome aboard, {recipientName}!
           </Heading>
 
           {/* Intro Text */}
@@ -88,7 +91,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
             lineHeight="1.6"
             textAlign="center"
           >
-            We&apos;re thrilled to have you join <strong>{config.companyName || config.brandName}</strong>.
+            We&apos;re thrilled to have you join <strong>{companyName}</strong>.
             Your workspace is ready, fully configured, and optimized for speed. Let&apos;s turn your ideas into reality.
           </Paragraph>
 
@@ -224,7 +227,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
               />
             )}
             <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="16px 0 0 0">
-              © 2026 {config.companyName || config.brandName}. All rights reserved.<br />
+              © 2026 {companyName}. All rights reserved.<br />
               Sent with ❤️ using @unlayer/react-elements.<br />
               <a href="#unsubscribe" style={{ color: textMuted, textDecoration: 'underline' }}>
                 Unsubscribe
@@ -248,13 +251,13 @@ export const WelcomeEmail = () => (
   <Email backgroundColor="${config.backgroundColor || '#f8fafc'}" contentWidth="600px">
     <Row padding="24px 0">
       <Column>
-        <Image src="${config.logoUrl}" alt="${config.brandName}" width="140px" />
+        <Image src="${config.logoUrl}" alt="${config.brandName || 'Brand'}" width="140px" />
       </Column>
     </Row>
     <Row>
       <Column backgroundColor="#ffffff" borderRadius="16px" padding="40px 32px">
-        <Heading level="h1" color="${config.textColor}">Welcome aboard, ${config.recipientName}!</Heading>
-        <Paragraph color="#64748b">We're thrilled to have you join ${config.brandName}. Your workspace is ready.</Paragraph>
+        <Heading level="h1" color="${config.textColor}">Welcome aboard, ${config.recipientName || 'Developer'}!</Heading>
+        <Paragraph color="#64748b">We're thrilled to have you join ${config.brandName || 'Brand'}. Your workspace is ready.</Paragraph>
         <Button href="https://unlayer.com" backgroundColor="${config.primaryColor}" color="#ffffff" borderRadius="8px" padding="14px 28px">
           Launch Dashboard →
         </Button>

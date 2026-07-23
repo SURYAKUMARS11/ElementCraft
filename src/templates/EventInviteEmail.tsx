@@ -27,6 +27,8 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
   const textColor = isDark ? '#f3e8ff' : config.textColor || '#1e1b4b';
   const textMuted = isDark ? '#a855f7' : '#6b21a8';
   const primaryColor = config.primaryColor || '#8b5cf6';
+  const brandName = config.brandName || 'Elements Summit';
+  const recipientName = config.recipientName || 'Alex Mercer';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
@@ -129,7 +131,7 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
               padding="20px"
             >
               <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" textAlign="center">
-                PASS RECIPIENT: {config.recipientName.toUpperCase() || 'ALEX MERCER'}
+                PASS RECIPIENT: {recipientName.toUpperCase()}
               </Paragraph>
               <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold" textAlign="center">
                 VIP ALL-ACCESS TICKET
@@ -182,7 +184,7 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
               />
             )}
             <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="12px 0 0 0">
-              Hosted by {config.brandName} • Powered by Unlayer Elements
+              Hosted by {brandName} • Powered by Unlayer Elements
             </Paragraph>
           </Column>
         </Row>
@@ -199,7 +201,7 @@ export const EventTicketEmail = () => (
     <Row padding="24px 0">
       <Column backgroundColor="#ffffff" borderRadius="20px" padding="40px 32px">
         <Heading level="h1" color="${config.primaryColor}">${config.eventName || 'Elements Summit 2026'}</Heading>
-        <Paragraph>Pass Holder: ${config.recipientName}</Paragraph>
+        <Paragraph>Pass Holder: ${config.recipientName || 'Guest'}</Paragraph>
         <Button href="https://unlayer.com" backgroundColor="${config.primaryColor}">Confirm RSVP →</Button>
       </Column>
     </Row>

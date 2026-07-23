@@ -24,6 +24,7 @@ export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' 
   const textColor = isDark ? '#f1f5f9' : config.textColor || '#0f172a';
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#2563eb';
+  const brandName = config.brandName || 'Acme Enterprise';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="700px" mode={mode}>
@@ -41,7 +42,7 @@ export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' 
           <Row layout={ColumnLayouts.TwoEqual}>
             <Column>
               <Paragraph color={primaryColor} fontSize="13px" fontWeight="bold" letterSpacing="1.5px">
-                {config.brandName.toUpperCase()} BRIEFING
+                {brandName.toUpperCase()} BRIEFING
               </Paragraph>
               <Heading level="h1" color={textColor} fontSize="28px" fontWeight="bold">
                 Q2 2026 Performance &amp; Ecosystem Growth
@@ -205,7 +206,7 @@ export const ExecutiveReport = () => (
   <Document backgroundColor="#f8fafc" contentWidth="700px">
     <Row padding="24px 0">
       <Column backgroundColor="#ffffff" borderRadius="16px" padding="40px 48px">
-        <Heading level="h1" color="${config.primaryColor}">${config.brandName} Q2 Report</Heading>
+        <Heading level="h1" color="${config.primaryColor}">${config.brandName || 'Acme Enterprise'} Q2 Report</Heading>
         <Paragraph>Confidential Performance Summary</Paragraph>
       </Column>
     </Row>

@@ -25,6 +25,9 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
   const textColor = isDark ? '#f8fafc' : config.textColor || '#0f172a';
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#059669';
+  const brandName = config.brandName || 'Acme Corp';
+  const recipientName = config.recipientName || 'Alex Mercer';
+  const companyName = config.companyName || 'Apex Technologies LLC';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="680px" mode={mode}>
@@ -42,12 +45,12 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
           <Row layout={ColumnLayouts.TwoEqual}>
             <Column>
               <Heading level="h2" color={primaryColor} fontSize="26px" fontWeight="bold">
-                {config.brandName || 'Acme Corp'}
+                {brandName}
               </Heading>
               <Paragraph color={textMuted} fontSize="13px" lineHeight="1.4">
                 100 Innovation Way, Suite 400<br />
                 San Francisco, CA 94105<br />
-                support@{config.brandName.toLowerCase().replace(/\s+/g, '')}.com
+                support@{brandName.toLowerCase().replace(/\s+/g, '')}.com
               </Paragraph>
             </Column>
             <Column>
@@ -82,10 +85,10 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
                 BILLED TO:
               </Heading>
               <Heading level="h4" color={textColor} fontSize="15px" fontWeight="bold">
-                {config.recipientName || 'Alex Mercer'}
+                {recipientName}
               </Heading>
               <Paragraph color={textMuted} fontSize="13px" lineHeight="1.4">
-                {config.companyName || 'Apex Technologies LLC'}<br />
+                {companyName}<br />
                 {config.recipientEmail || 'alex.mercer@apex.io'}
               </Paragraph>
             </Column>
@@ -166,7 +169,7 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
             padding="16px 40px"
           >
             <Paragraph color={textMuted} fontSize="12px" textAlign="center">
-              Page 1 of 1 • Official Receipt for {config.brandName} • Generated with Unlayer Elements
+              Page 1 of 1 • Official Receipt for {brandName} • Generated with Unlayer Elements
             </Paragraph>
           </Column>
         </Row>
@@ -182,7 +185,7 @@ export const InvoiceDocument = () => (
   <Document backgroundColor="#f1f5f9" contentWidth="680px">
     <Row padding="24px 0">
       <Column backgroundColor="#ffffff" borderRadius="16px" padding="32px 40px">
-        <Heading level="h2" color="${config.primaryColor}">${config.brandName}</Heading>
+        <Heading level="h2" color="${config.primaryColor}">${config.brandName || 'Acme Corp'}</Heading>
         <Heading level="h3">INVOICE #${config.invoiceNumber || 'INV-2026-9842'}</Heading>
         <Table
           headers={["Item Description", "Qty", "Unit Price", "Total"]}
