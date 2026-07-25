@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { renderToHtml } from '@unlayer/react-elements';
 import { TEMPLATES } from '../templates';
 import type { TemplateDefinition, TemplateCustomization, RenderMode, DeviceFrame } from '../types/template';
+import { LiveIframeHtml } from './LiveIframeHtml';
 import {
   ArrowLeft,
   Sparkles,
@@ -71,8 +72,6 @@ export const StudioWorkspace: React.FC<Props> = ({
   };
 
   const isCompare = stageMode === 'compare';
-  // Create a unique key hash for customization so every input update forces the iframe to re-render live!
-  const customizationKey = JSON.stringify(customization);
 
   return (
     <div className="standalone-studio-app">
@@ -414,12 +413,10 @@ export const StudioWorkspace: React.FC<Props> = ({
                     </div>
                     <span className="badge-tag web">HTML5 FLEXBOX</span>
                   </div>
-                  <iframe
-                    key={`comp-web-${selectedTemplate.id}-${customizationKey}`}
-                    srcDoc={getRenderedHtml('web')}
+                  <LiveIframeHtml
+                    html={getRenderedHtml('web')}
                     title="Web Renderer"
                     className="compare-card-iframe"
-                    sandbox="allow-popups allow-same-origin"
                   />
                 </div>
 
@@ -430,12 +427,10 @@ export const StudioWorkspace: React.FC<Props> = ({
                     </div>
                     <span className="badge-tag email">XHTML TABLES</span>
                   </div>
-                  <iframe
-                    key={`comp-email-${selectedTemplate.id}-${customizationKey}`}
-                    srcDoc={getRenderedHtml('email')}
+                  <LiveIframeHtml
+                    html={getRenderedHtml('email')}
                     title="Email Renderer"
                     className="compare-card-iframe"
-                    sandbox="allow-popups allow-same-origin"
                   />
                 </div>
 
@@ -446,12 +441,10 @@ export const StudioWorkspace: React.FC<Props> = ({
                     </div>
                     <span className="badge-tag document">PDF / PRINT SPEC</span>
                   </div>
-                  <iframe
-                    key={`comp-doc-${selectedTemplate.id}-${customizationKey}`}
-                    srcDoc={getRenderedHtml('document')}
+                  <LiveIframeHtml
+                    html={getRenderedHtml('document')}
                     title="Document Renderer"
                     className="compare-card-iframe"
-                    sandbox="allow-popups allow-same-origin"
                   />
                 </div>
               </div>
@@ -473,12 +466,10 @@ export const StudioWorkspace: React.FC<Props> = ({
                   </div>
                 </div>
 
-                <iframe
-                  key={`single-${selectedTemplate.id}-${stageMode}-${customizationKey}`}
-                  srcDoc={getRenderedHtml(stageMode as RenderMode)}
+                <LiveIframeHtml
+                  html={getRenderedHtml(stageMode as RenderMode)}
                   title="Studio Stage Render"
                   className="viewport-stage-iframe"
-                  sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"
                 />
               </div>
             )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderToHtml } from '@unlayer/react-elements';
 import type { TemplateDefinition, TemplateCustomization, RenderMode, DeviceFrame } from '../types/template';
+import { LiveIframeHtml } from './LiveIframeHtml';
 import { Monitor, Smartphone, Mail, Globe, Printer, Columns3, CheckCircle } from 'lucide-react';
 
 export type StageViewMode = RenderMode | 'compare';
@@ -37,7 +38,6 @@ export const PreviewStage: React.FC<Props> = ({
   };
 
   const isCompare = stageMode === 'compare';
-  const customizationKey = JSON.stringify(customization);
 
   return (
     <main className="preview-canvas-stage">
@@ -117,12 +117,10 @@ export const PreviewStage: React.FC<Props> = ({
                 <h3><Globe size={15} /> 🌐 Web Page Renderer</h3>
                 <span className="cat-pill email">Web Spec</span>
               </div>
-              <iframe
-                key={`stage-web-${template.id}-${customizationKey}`}
-                srcDoc={getRenderedHtmlForMode('web')}
+              <LiveIframeHtml
+                html={getRenderedHtmlForMode('web')}
                 title="Web Renderer Preview"
                 className="compare-iframe"
-                sandbox="allow-popups allow-same-origin"
               />
             </div>
 
@@ -132,12 +130,10 @@ export const PreviewStage: React.FC<Props> = ({
                 <h3><Mail size={15} /> 📧 Email Renderer</h3>
                 <span className="cat-pill email">Table Spec</span>
               </div>
-              <iframe
-                key={`stage-email-${template.id}-${customizationKey}`}
-                srcDoc={getRenderedHtmlForMode('email')}
+              <LiveIframeHtml
+                html={getRenderedHtmlForMode('email')}
                 title="Email Renderer Preview"
                 className="compare-iframe"
-                sandbox="allow-popups allow-same-origin"
               />
             </div>
 
@@ -147,12 +143,10 @@ export const PreviewStage: React.FC<Props> = ({
                 <h3><Printer size={15} /> 📄 Document Renderer</h3>
                 <span className="cat-pill document">PDF Print Spec</span>
               </div>
-              <iframe
-                key={`stage-doc-${template.id}-${customizationKey}`}
-                srcDoc={getRenderedHtmlForMode('document')}
+              <LiveIframeHtml
+                html={getRenderedHtmlForMode('document')}
                 title="Document Renderer Preview"
                 className="compare-iframe"
-                sandbox="allow-popups allow-same-origin"
               />
             </div>
           </div>
@@ -173,12 +167,10 @@ export const PreviewStage: React.FC<Props> = ({
               </div>
             </div>
 
-            <iframe
-              key={`stage-single-${template.id}-${stageMode}-${customizationKey}`}
-              srcDoc={getRenderedHtmlForMode(stageMode as RenderMode)}
+            <LiveIframeHtml
+              html={getRenderedHtmlForMode(stageMode as RenderMode)}
               title="Rendered Template Stage"
               className="single-stage-iframe"
-              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"
             />
           </div>
         )}

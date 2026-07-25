@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { renderToHtml } from '@unlayer/react-elements';
 import { TEMPLATES } from '../templates';
 import type { TemplateDefinition, RenderMode } from '../types/template';
+import { LiveIframeHtml } from './LiveIframeHtml';
 import {
   Sparkles,
   ArrowRight,
@@ -162,12 +163,10 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
           </div>
 
           <div className="sandbox-stage">
-            <iframe
-              key={`hero-${selectedTemplate.id}-${activeMode}-${primaryColor}`}
-              srcDoc={heroHtml}
+            <LiveIframeHtml
+              html={heroHtml}
               title="Hero Live Render Preview"
               className="hero-iframe"
-              sandbox="allow-popups allow-same-origin"
             />
           </div>
         </div>
