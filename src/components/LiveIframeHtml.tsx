@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface LiveIframeProps {
   html: string;
@@ -7,31 +7,27 @@ interface LiveIframeProps {
 }
 
 export const LiveIframeHtml: React.FC<LiveIframeProps> = ({ html, title, className }) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [blobUrl, setBlobUrl] = useState<string>('');
 
   useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+    if (!html) return;
 
-    try {
-      const doc = iframe.contentDocument || iframe.contentWindow?.document;
-      if (doc) {
-        doc.open();
-        doc.write(html);
-        doc.close();
-      }
-    } catch {
-      // Fallback if doc.write is blocked by strict origin sandbox
-      iframe.srcdoc = html;
-    }
+    // Create a Blob URL so browsers (Chrome, Edge, Firefox, Safari) reload the iframe reliably
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    setBlobUrl(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [html]);
 
   return (
     <iframe
-      ref={iframeRef}
+      src={blobUrl}
       title={title}
       className={className}
-      sandbox="allow-popups allow-same-origin allow-scripts"
+      sandbox="allow-popups allow-same-origin"
     />
   );
 };

@@ -7,8 +7,6 @@ import {
   Heading,
   Paragraph,
   Button,
-  Image,
-  Divider,
   Social,
   ColumnLayouts,
 } from '@unlayer/react-elements';
@@ -21,12 +19,14 @@ interface Props {
 
 export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' }) => {
   const Container = mode === 'document' ? Body : Email;
-  const isDark = config.darkMode;
-  const bgColor = isDark ? '#090d16' : '#f3f4f6';
+  const isDark = Boolean(config.darkMode);
+
+  const bgColor = config.backgroundColor || (isDark ? '#090d16' : '#f3f4f6');
   const cardBg = isDark ? '#111827' : '#ffffff';
-  const textColor = isDark ? '#f9fafb' : config.textColor || '#111827';
+  const textColor = config.textColor || (isDark ? '#f9fafb' : '#111827');
   const textMuted = isDark ? '#9ca3af' : '#4b5563';
   const primaryColor = config.primaryColor || '#ec4899';
+
   const brandName = config.brandName || 'Frontend Pulse';
 
   return (
@@ -57,93 +57,69 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
             borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
           }}
         >
-          <Image
-            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"
-            alt="Code on screen"
-            width="100%"
-          />
-
-          <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" containerPadding="16px 0 4px 0">
-            FEATURED DISPATCH
-          </Paragraph>
-
-          <Heading level="h2" color={textColor} fontSize="24px" fontWeight="bold" lineHeight="1.3">
-            Why Code-First Template Engines Are Replacing Legacy Drag-and-Drop Editors
+          <Heading level="h2" color={textColor} fontSize="22px" fontWeight="bold" containerPadding="0 0 12px 0">
+            🔥 Why Code-First Component Trees are Replacing Drag-and-Drop Builders
           </Heading>
-
-          <Paragraph color={textMuted} fontSize="15px" lineHeight="1.6" containerPadding="8px 0 16px 0">
-            With tools like <strong>@unlayer/react-elements</strong>, developers can maintain email templates inside Git repositories, use TypeScript autocomplete, and compile to clean HTML tables automatically.
+          <Paragraph color={textMuted} fontSize="15px" lineHeight="1.6">
+            Building email templates used to mean wrestling with raw table tags or locked visual builders. With <strong>@unlayer/react-elements</strong>, developers write pure React JSX that compiles directly to XHTML tables and responsive web layouts.
           </Paragraph>
-
-          <Button
-            href="https://github.com/unlayer/elements"
-            backgroundColor={primaryColor}
-            color="#ffffff"
-            fontSize="14px"
-            fontWeight="bold"
-            borderRadius="8px"
-            padding="10px 20px"
-          >
-            Read Full Article →
-          </Button>
+          {config.showCTA && (
+            <Button
+              href="https://github.com/unlayer/elements"
+              backgroundColor={primaryColor}
+              color="#ffffff"
+              borderRadius="8px"
+              padding="12px 24px"
+              fontSize="14px"
+              fontWeight="bold"
+            >
+              Read Full Article →
+            </Button>
+          )}
         </Column>
       </Row>
 
-      {/* 2-Column Grid Article Highlights */}
-      <Row layout={ColumnLayouts.TwoEqual} padding="8px 0">
+      {/* 2-Column Articles Grid */}
+      <Row layout={ColumnLayouts.TwoEqual} padding="12px 0">
         <Column
           backgroundColor={cardBg}
           borderRadius="12px"
-          padding="20px"
+          padding="24px"
           border={{
             borderTopWidth: '1px',
             borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
           }}
         >
-          <Heading level="h4" color={primaryColor} fontSize="12px" fontWeight="bold">
-            TOOL SPOTLIGHT
-          </Heading>
-          <Heading level="h3" color={textColor} fontSize="17px" fontWeight="bold">
-            Vite 8 &amp; React 19 Performance Insights
+          <Heading level="h3" color={primaryColor} fontSize="18px" fontWeight="bold">
+            ⚡ Zero-Hydration SSR
           </Heading>
           <Paragraph color={textMuted} fontSize="13px" lineHeight="1.5">
-            Discover how zero-bundle SSR techniques improve template compilation times by 4x.
+            Render templates on Next.js, Remix, or Vite without client JS bundle bloat.
           </Paragraph>
         </Column>
 
         <Column
           backgroundColor={cardBg}
           borderRadius="12px"
-          padding="20px"
+          padding="24px"
           border={{
             borderTopWidth: '1px',
             borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
           }}
         >
-          <Heading level="h4" color={primaryColor} fontSize="12px" fontWeight="bold">
-            DESIGN SYSTEMS
-          </Heading>
-          <Heading level="h3" color={textColor} fontSize="17px" fontWeight="bold">
-            Building Bulletproof Dark Mode Emails
+          <Heading level="h3" color={primaryColor} fontSize="18px" fontWeight="bold">
+            🛡️ 100% ESP Compatibility
           </Heading>
           <Paragraph color={textMuted} fontSize="13px" lineHeight="1.5">
-            How target media queries ensure your emails look stunning on iOS, Outlook, and Gmail.
+            Verified MSO conditional comments ensure flawless Outlook &amp; Gmail delivery.
           </Paragraph>
         </Column>
       </Row>
 
-      {/* Footer / Social */}
+      {/* Footer */}
       {config.showFooter && (
         <Row padding="24px 0">
           <Column>
-            <Divider
-              border={{
-                borderTopWidth: '1px',
-                borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
-                borderTopStyle: 'solid',
-              }}
-              containerPadding="0 0 20px 0"
-            />
             {config.showSocials && (
               <Social
                 iconType="circle"
@@ -155,8 +131,8 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
                 ]}
               />
             )}
-            <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="12px 0 0 0">
-              Curated with ⚡ by {brandName} • Built with Unlayer Elements
+            <Paragraph color={textMuted} fontSize="12px" textAlign="center">
+              Curated weekly by <strong>{brandName}</strong>. Sent via @unlayer/react-elements.
             </Paragraph>
           </Column>
         </Row>
@@ -166,20 +142,14 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
 };
 
 export const getTechNewsletterJsx = (config: TemplateCustomization): string => {
-  return `import { Email, Row, Column, Heading, Paragraph, Button, Image, ColumnLayouts } from '@unlayer/react-elements';
+  return `import { Email, Row, Column, Heading, Paragraph, Button } from '@unlayer/react-elements';
 
 export const Newsletter = () => (
   <Email backgroundColor="${config.backgroundColor || '#f3f4f6'}" contentWidth="620px">
-    <Row padding="24px 0">
-      <Column textAlign="center">
-        <Heading level="h1">${config.brandName || 'Digest'} Tech Digest</Heading>
-        <Paragraph>Issue #${config.issueNumber || '42'}</Paragraph>
-      </Column>
-    </Row>
-    <Row>
-      <Column backgroundColor="#ffffff" borderRadius="16px" padding="32px">
-        <Heading level="h2">Code-First Template Engines</Heading>
-        <Button href="https://github.com/unlayer/elements" backgroundColor="${config.primaryColor}">Read Story →</Button>
+    <Row padding="24px">
+      <Column>
+        <Heading level="h1">${config.brandName || 'Tech Pulse'}</Heading>
+        <Button backgroundColor="${config.primaryColor}">Read Story</Button>
       </Column>
     </Row>
   </Email>

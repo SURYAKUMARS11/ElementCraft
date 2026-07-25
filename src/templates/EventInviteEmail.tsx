@@ -7,8 +7,6 @@ import {
   Heading,
   Paragraph,
   Button,
-  Image,
-  Divider,
   Social,
   ColumnLayouts,
 } from '@unlayer/react-elements';
@@ -21,14 +19,17 @@ interface Props {
 
 export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) => {
   const Container = mode === 'document' ? Body : Email;
-  const isDark = config.darkMode;
-  const bgColor = isDark ? '#090514' : '#faf5ff';
+  const isDark = Boolean(config.darkMode);
+
+  const bgColor = config.backgroundColor || (isDark ? '#090514' : '#faf5ff');
   const cardBg = isDark ? '#140c2a' : '#ffffff';
-  const textColor = isDark ? '#f3e8ff' : config.textColor || '#1e1b4b';
+  const textColor = config.textColor || (isDark ? '#f3e8ff' : '#1e1b4b');
   const textMuted = isDark ? '#a855f7' : '#6b21a8';
   const primaryColor = config.primaryColor || '#8b5cf6';
+
   const brandName = config.brandName || 'Elements Summit';
   const recipientName = config.recipientName || 'Alex Mercer';
+  const eventName = config.eventName || 'Global Developers Conference 2026';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
@@ -64,106 +65,77 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
             fontWeight="bold"
             textAlign="center"
             lineHeight="1.2"
-            containerPadding="12px 0 16px 0"
+            containerPadding="16px 0 12px 0"
           >
-            {config.eventName || 'Unlayer Elements Global Summit 2026'}
+            {eventName}
           </Heading>
 
+          {/* Personal Greeting */}
           <Paragraph
-            color={textMuted}
+            color={textColor}
             fontSize="16px"
             textAlign="center"
             lineHeight="1.6"
           >
-            Join lead engineers, architects, and product designers for an exclusive deep-dive into code-first email &amp; document architecture.
+            Dear <strong>{recipientName}</strong>, you have been selected to join leading engineering leaders and template architects at <strong>{brandName}</strong>.
           </Paragraph>
 
-          <Divider
-            border={{
-              borderTopWidth: '1px',
-              borderTopColor: isDark ? '#3b0764' : '#f3e8ff',
-              borderTopStyle: 'solid',
-            }}
-            containerPadding="24px 0"
-          />
-
-          {/* Event Details 2-Column Grid */}
-          <Row layout={ColumnLayouts.TwoEqual}>
-            <Column>
-              <Heading level="h4" color={primaryColor} fontSize="20px" textAlign="center">
-                📅 DATE &amp; TIME
-              </Heading>
-              <Paragraph color={textColor} fontSize="14px" fontWeight="bold" textAlign="center">
-                {config.eventDate || 'Thursday, July 31, 2026'}
+          {/* Key Event Details Grid */}
+          <Row layout={ColumnLayouts.TwoEqual} padding="24px 0">
+            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="12px" padding="16px">
+              <Paragraph color={primaryColor} fontSize="11px" fontWeight="bold" letterSpacing="1px">
+                DATE &amp; TIME
               </Paragraph>
-              <Paragraph color={textMuted} fontSize="13px" textAlign="center">
-                10:00 AM - 3:00 PM PST
+              <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
+                September 14-16, 2026
+              </Paragraph>
+              <Paragraph color={textMuted} fontSize="12px">
+                09:00 AM PST Daily
               </Paragraph>
             </Column>
 
-            <Column>
-              <Heading level="h4" color={primaryColor} fontSize="20px" textAlign="center">
-                📍 LOCATION
-              </Heading>
-              <Paragraph color={textColor} fontSize="14px" fontWeight="bold" textAlign="center">
-                Moscone Center &amp; Virtual Live
+            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="12px" padding="16px">
+              <Paragraph color={primaryColor} fontSize="11px" fontWeight="bold" letterSpacing="1px">
+                LOCATION / VENUE
               </Paragraph>
-              <Paragraph color={textMuted} fontSize="13px" textAlign="center">
-                San Francisco, CA
+              <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
+                Moscone Center West
+              </Paragraph>
+              <Paragraph color={textMuted} fontSize="12px">
+                San Francisco, CA &amp; Virtual
               </Paragraph>
             </Column>
           </Row>
 
-          <Divider
-            border={{
-              borderTopWidth: '1px',
-              borderTopColor: isDark ? '#3b0764' : '#f3e8ff',
-              borderTopStyle: 'solid',
-            }}
-            containerPadding="24px 0"
-          />
-
-          {/* Ticket Pass Placeholder */}
-          <Row padding="0">
+          {/* Ticket Pass Container */}
+          <Row padding="0 0 20px 0">
             <Column
               backgroundColor={isDark ? '#2e1065' : '#f3e8ff'}
               borderRadius="12px"
               padding="20px"
             >
-              <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" textAlign="center">
-                PASS RECIPIENT: {recipientName.toUpperCase()}
+              <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" letterSpacing="1px" textAlign="center">
+                PASS CODE: VIP-884-X9
               </Paragraph>
               <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold" textAlign="center">
-                VIP ALL-ACCESS TICKET
+                All-Access Keynote &amp; Builder Workshops Pass
               </Heading>
-              <Image
-                src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=ELEMENTS-SUMMIT-2026-VIP"
-                alt="Ticket QR Code"
-                width="110px"
-              />
-              <Paragraph color={textMuted} fontSize="11px" textAlign="center" containerPadding="8px 0 0 0">
-                Ticket Code: #ELM-VIP-99410
-              </Paragraph>
             </Column>
           </Row>
 
-          {/* CTA */}
+          {/* RSVP Button */}
           {config.showCTA && (
-            <Row padding="24px 0 0 0">
-              <Column>
-                <Button
-                  href="https://unlayer.com/elements"
-                  backgroundColor={primaryColor}
-                  color="#ffffff"
-                  fontSize="16px"
-                  fontWeight="bold"
-                  borderRadius="10px"
-                  padding="14px 32px"
-                >
-                  Confirm Your RSVP →
-                </Button>
-              </Column>
-            </Row>
+            <Button
+              href="https://unlayer.com"
+              backgroundColor={primaryColor}
+              color="#ffffff"
+              borderRadius="10px"
+              padding="16px 36px"
+              fontSize="16px"
+              fontWeight="bold"
+            >
+              Confirm VIP Ticket RSVP →
+            </Button>
           )}
         </Column>
       </Row>
@@ -183,8 +155,8 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
                 ]}
               />
             )}
-            <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="12px 0 0 0">
-              Hosted by {brandName} • Powered by Unlayer Elements
+            <Paragraph color={textMuted} fontSize="12px" textAlign="center">
+              Hosted by <strong>{brandName}</strong>. Powered by @unlayer/react-elements.
             </Paragraph>
           </Column>
         </Row>
@@ -194,15 +166,15 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
 };
 
 export const getEventInviteJsx = (config: TemplateCustomization): string => {
-  return `import { Email, Row, Column, Heading, Paragraph, Button, Image, ColumnLayouts } from '@unlayer/react-elements';
+  return `import { Email, Row, Column, Heading, Paragraph, Button } from '@unlayer/react-elements';
 
-export const EventTicketEmail = () => (
-  <Email backgroundColor="#faf5ff" contentWidth="600px">
-    <Row padding="24px 0">
-      <Column backgroundColor="#ffffff" borderRadius="20px" padding="40px 32px">
-        <Heading level="h1" color="${config.primaryColor}">${config.eventName || 'Elements Summit 2026'}</Heading>
-        <Paragraph>Pass Holder: ${config.recipientName || 'Guest'}</Paragraph>
-        <Button href="https://unlayer.com" backgroundColor="${config.primaryColor}">Confirm RSVP →</Button>
+export const EventInvite = () => (
+  <Email backgroundColor="${config.backgroundColor || '#faf5ff'}" contentWidth="600px">
+    <Row padding="32px">
+      <Column backgroundColor="#ffffff" borderRadius="20px">
+        <Heading level="h1">${config.eventName || 'Summit 2026'}</Heading>
+        <Paragraph>Dear ${config.recipientName || 'Guest'}, you are invited!</Paragraph>
+        <Button backgroundColor="${config.primaryColor}">Confirm RSVP</Button>
       </Column>
     </Row>
   </Email>

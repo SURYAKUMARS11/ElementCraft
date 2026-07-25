@@ -18,12 +18,14 @@ interface Props {
 
 export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' }) => {
   const Container = mode === 'email' ? Body : Document;
-  const isDark = config.darkMode;
-  const bgColor = isDark ? '#0b0f19' : '#f8fafc';
+  const isDark = Boolean(config.darkMode);
+
+  const bgColor = config.backgroundColor || (isDark ? '#0b0f19' : '#f8fafc');
   const cardBg = isDark ? '#161e2e' : '#ffffff';
-  const textColor = isDark ? '#f1f5f9' : config.textColor || '#0f172a';
+  const textColor = config.textColor || (isDark ? '#f1f5f9' : '#0f172a');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#2563eb';
+
   const brandName = config.brandName || 'Acme Enterprise';
 
   return (
@@ -60,154 +62,97 @@ export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' 
 
           <Divider
             border={{
-              borderTopWidth: '2px',
-              borderTopColor: primaryColor,
-              borderTopStyle: 'solid',
-            }}
-            containerPadding="20px 0"
-          />
-
-          {/* Key Metrics / KPI Grid */}
-          <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold">
-            Executive Summary KPI Snapshot
-          </Heading>
-        </Column>
-      </Row>
-
-      {/* 4 Metric Cards */}
-      <Row layout={ColumnLayouts.FourEqual} padding="0">
-        <Column
-          backgroundColor={cardBg}
-          padding="16px"
-          border={{
-            borderRightWidth: '1px',
-            borderRightColor: isDark ? '#1e293b' : '#f1f5f9',
-          }}
-        >
-          <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
-            ANNUAL RECURRING REVENUE
-          </Paragraph>
-          <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
-            $12.4M
-          </Heading>
-          <Paragraph color="#10b981" fontSize="12px" fontWeight="bold">
-            ↑ +34% YoY
-          </Paragraph>
-        </Column>
-
-        <Column
-          backgroundColor={cardBg}
-          padding="16px"
-          border={{
-            borderRightWidth: '1px',
-            borderRightColor: isDark ? '#1e293b' : '#f1f5f9',
-          }}
-        >
-          <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
-            ACTIVE TEMPLATE BUILDS
-          </Paragraph>
-          <Heading level="h2" color={textColor} fontSize="24px" fontWeight="bold">
-            184,200
-          </Heading>
-          <Paragraph color="#10b981" fontSize="12px" fontWeight="bold">
-            ↑ +82% QoQ
-          </Paragraph>
-        </Column>
-
-        <Column
-          backgroundColor={cardBg}
-          padding="16px"
-          border={{
-            borderRightWidth: '1px',
-            borderRightColor: isDark ? '#1e293b' : '#f1f5f9',
-          }}
-        >
-          <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
-            NET PROMOTER SCORE
-          </Paragraph>
-          <Heading level="h2" color={textColor} fontSize="24px" fontWeight="bold">
-            +74
-          </Heading>
-          <Paragraph color="#10b981" fontSize="12px" fontWeight="bold">
-            World-class
-          </Paragraph>
-        </Column>
-
-        <Column backgroundColor={cardBg} padding="16px">
-          <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
-            BUILDER RETENTION
-          </Paragraph>
-          <Heading level="h2" color={textColor} fontSize="24px" fontWeight="bold">
-            96.8%
-          </Heading>
-          <Paragraph color="#10b981" fontSize="12px" fontWeight="bold">
-            Top Decile
-          </Paragraph>
-        </Column>
-      </Row>
-
-      {/* Narrative Section */}
-      <Row padding="0 0 24px 0">
-        <Column
-          backgroundColor={cardBg}
-          borderRadius="0 0 16px 16px"
-          padding="24px 48px 40px 48px"
-        >
-          <Divider
-            border={{
               borderTopWidth: '1px',
               borderTopColor: isDark ? '#1e293b' : '#e2e8f0',
-              borderTopStyle: 'solid',
             }}
-            containerPadding="16px 0"
+            containerPadding="24px 0"
           />
 
-          <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold">
-            Strategic Highlights &amp; Elements Ecosystem Growth
+          {/* 4-KPI Metric Grid */}
+          <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold" containerPadding="0 0 16px 0">
+            Key Performance Metrics:
           </Heading>
 
-          <Paragraph color={textMuted} fontSize="14px" lineHeight="1.7" containerPadding="8px 0 16px 0">
-            During Q2 2026, engineering adoption of the <strong>@unlayer/react-elements</strong> package accelerated across enterprise customers. By transitioning legacy email markup pipelines to React components, development cycles were reduced by <strong>65%</strong>.
-          </Paragraph>
-
-          <Paragraph color={textMuted} fontSize="14px" lineHeight="1.7">
-            Key milestones included launching full TypeScript schema validation, instant HTML-to-PDF rendering, and bi-directional synchronization with visual builder JSON definitions.
-          </Paragraph>
-
-          <Row layout={ColumnLayouts.TwoEqual} padding="24px 0 0 0">
-            <Column>
-              <Paragraph color={textColor} fontSize="13px" fontWeight="bold">
-                Prepared By:
-              </Paragraph>
-              <Paragraph color={textMuted} fontSize="13px">
-                {config.recipientName || 'Sarah Jenkins'}<br />
-                Head of Product Engineering
+          <Row layout={ColumnLayouts.FourEqual}>
+            <Column backgroundColor={isDark ? '#1e293b' : '#f1f5f9'} borderRadius="8px" padding="16px">
+              <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
+                $4.2M
+              </Heading>
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
+                ARR GROWING 48%
               </Paragraph>
             </Column>
-            <Column>
-              <Paragraph color={textColor} fontSize="13px" fontWeight="bold" textAlign="right">
-                Approved By:
+
+            <Column backgroundColor={isDark ? '#1e293b' : '#f1f5f9'} borderRadius="8px" padding="16px">
+              <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
+                99.98%
+              </Heading>
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
+                SYSTEM UPTIME
               </Paragraph>
-              <Paragraph color={textMuted} fontSize="13px" textAlign="right">
-                {config.companyName || 'Executive Leadership Committee'}
+            </Column>
+
+            <Column backgroundColor={isDark ? '#1e293b' : '#f1f5f9'} borderRadius="8px" padding="16px">
+              <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
+                14.2K
+              </Heading>
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
+                ACTIVE DEV LICENSES
+              </Paragraph>
+            </Column>
+
+            <Column backgroundColor={isDark ? '#1e293b' : '#f1f5f9'} borderRadius="8px" padding="16px">
+              <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
+                4.9/5
+              </Heading>
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold">
+                CSAT RATING
               </Paragraph>
             </Column>
           </Row>
         </Column>
       </Row>
+
+      {/* Report Summary Card */}
+      <Row padding="0">
+        <Column
+          backgroundColor={cardBg}
+          borderRadius="0 0 16px 16px"
+          padding="24px 48px 40px 48px"
+        >
+          <Heading level="h3" color={textColor} fontSize="20px" fontWeight="bold" containerPadding="0 0 12px 0">
+            Executive Summary
+          </Heading>
+          <Paragraph color={textMuted} fontSize="14px" lineHeight="1.6">
+            In Q2 2026, <strong>{brandName}</strong> expanded its developer platform adoption by 48% year-over-year. The transition to <code>@unlayer/react-elements</code> for programmatic document and email template generation resulted in a 65% reduction in customer support tickets related to rendering glitches on legacy email clients.
+          </Paragraph>
+        </Column>
+      </Row>
+
+      {/* Footer */}
+      {config.showFooter && (
+        <Row padding="24px 0">
+          <Column>
+            <Paragraph color={textMuted} fontSize="12px" textAlign="center">
+              © 2026 {brandName}. Executive Briefing Document.<br />
+              Generated with @unlayer/react-elements Document Engine.
+            </Paragraph>
+          </Column>
+        </Row>
+      )}
     </Container>
   );
 };
 
 export const getExecutiveReportJsx = (config: TemplateCustomization): string => {
-  return `import { Document, Row, Column, Heading, Paragraph, Divider, ColumnLayouts } from '@unlayer/react-elements';
+  return `import { Document, Row, Column, Heading, Paragraph } from '@unlayer/react-elements';
 
 export const ExecutiveReport = () => (
-  <Document backgroundColor="#f8fafc" contentWidth="700px">
-    <Row padding="24px 0">
-      <Column backgroundColor="#ffffff" borderRadius="16px" padding="40px 48px">
-        <Heading level="h1" color="${config.primaryColor}">${config.brandName || 'Acme Enterprise'} Q2 Report</Heading>
-        <Paragraph>Confidential Performance Summary</Paragraph>
+  <Document backgroundColor="${config.backgroundColor || '#f8fafc'}" contentWidth="700px">
+    <Row padding="40px">
+      <Column>
+        <Heading level="h1" color="${config.primaryColor}">${config.brandName || 'Acme'} Performance Report</Heading>
+        <Paragraph color="#64748b">Q2 2026 Executive Briefing Document</Paragraph>
       </Column>
     </Row>
   </Document>

@@ -19,15 +19,19 @@ interface Props {
 
 export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) => {
   const Container = mode === 'email' ? Body : Document;
-  const isDark = config.darkMode;
-  const bgColor = isDark ? '#0f172a' : '#f1f5f9';
+  const isDark = Boolean(config.darkMode);
+  
+  const bgColor = config.backgroundColor || (isDark ? '#0f172a' : '#f1f5f9');
   const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = isDark ? '#f8fafc' : config.textColor || '#0f172a';
+  const textColor = config.textColor || (isDark ? '#f8fafc' : '#0f172a');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#059669';
+
   const brandName = config.brandName || 'Acme Corp';
   const recipientName = config.recipientName || 'Alex Mercer';
   const companyName = config.companyName || 'Apex Technologies LLC';
+  const invoiceNumber = config.invoiceNumber || 'INV-2026-8842';
+  const totalAmount = config.totalAmount || '$2,450.00';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="680px" mode={mode}>
@@ -58,13 +62,11 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
                 INVOICE / RECEIPT
               </Heading>
               <Paragraph color={primaryColor} fontSize="14px" fontWeight="bold" textAlign="right">
-                #{config.invoiceNumber || 'INV-2026-9842'}
+                #{invoiceNumber}
               </Paragraph>
               <Paragraph color={textMuted} fontSize="12px" textAlign="right">
-                Date: {config.invoiceDate || 'July 23, 2026'}
-              </Paragraph>
-              <Paragraph color="#10b981" fontSize="12px" fontWeight="bold" textAlign="right">
-                STATUS: PAID
+                Date: July 25, 2026<br />
+                Payment Method: Visa ending in •••• 4242
               </Paragraph>
             </Column>
           </Row>
@@ -73,103 +75,88 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
             border={{
               borderTopWidth: '1px',
               borderTopColor: isDark ? '#334155' : '#e2e8f0',
-              borderTopStyle: 'solid',
             }}
             containerPadding="20px 0"
           />
 
-          {/* Billed To / Shipping Address */}
+          {/* Billed To / Shipped To Grid */}
           <Row layout={ColumnLayouts.TwoEqual}>
             <Column>
-              <Heading level="h4" color={textMuted} fontSize="12px" letterSpacing="1px">
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold" letterSpacing="1px">
                 BILLED TO:
-              </Heading>
-              <Heading level="h4" color={textColor} fontSize="15px" fontWeight="bold">
+              </Paragraph>
+              <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
                 {recipientName}
-              </Heading>
+              </Paragraph>
               <Paragraph color={textMuted} fontSize="13px" lineHeight="1.4">
                 {companyName}<br />
-                {config.recipientEmail || 'alex.mercer@apex.io'}
+                742 Evergreen Terrace<br />
+                Springfield, OR 97477
               </Paragraph>
             </Column>
             <Column>
-              <Heading level="h4" color={textMuted} fontSize="12px" letterSpacing="1px">
-                PAYMENT METHOD:
-              </Heading>
-              <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
-                Visa ending in •••• 4242
+              <Paragraph color={textMuted} fontSize="11px" fontWeight="bold" letterSpacing="1px">
+                ORDER SUMMARY:
               </Paragraph>
-              <Paragraph color={textMuted} fontSize="12px">
-                Transaction ID: tx_89104812903
+              <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
+                Status: PAID IN FULL
+              </Paragraph>
+              <Paragraph color={textMuted} fontSize="13px" lineHeight="1.4">
+                Po Number: PO-993182<br />
+                Total Paid: <strong style={{ color: primaryColor }}>{totalAmount}</strong>
               </Paragraph>
             </Column>
           </Row>
         </Column>
       </Row>
 
-      {/* Itemized Table Card */}
+      {/* Itemized Invoice Table Card */}
       <Row padding="0">
         <Column
           backgroundColor={cardBg}
-          padding="0 40px 24px 40px"
+          borderRadius="0 0 16px 16px"
+          padding="0 40px 32px 40px"
         >
           <Table
-            headers={['Item Description', 'Qty', 'Unit Price', 'Total']}
+            headers={['ITEM DESCRIPTION', 'QTY', 'PRICE', 'TOTAL']}
             data={[
-              ['Elements Pro License (Annual)', '1', '$149.00', '$149.00'],
-              ['Custom React Component Pack', '2', '$49.00', '$98.00'],
-              ['Priority Support Add-on', '1', '$29.00', '$29.00'],
+              ['ElementCraft Pro License (Enterprise Unlimited)', '1', '$1,999.00', '$1,999.00'],
+              ['Dedicated Email Deliverability Setup & Support', '1', '$451.00', '$451.00'],
             ]}
-            padding="12px 16px"
-            border={{
-              borderTopWidth: '1px',
-              borderTopColor: isDark ? '#334155' : '#e2e8f0',
-              borderBottomWidth: '1px',
-              borderBottomColor: isDark ? '#334155' : '#e2e8f0',
-            }}
           />
 
           <Divider
             border={{
               borderTopWidth: '1px',
               borderTopColor: isDark ? '#334155' : '#e2e8f0',
-              borderTopStyle: 'solid',
             }}
-            containerPadding="16px 0"
+            containerPadding="20px 0"
           />
 
-          {/* Subtotals & Total */}
+          {/* Subtotal and Total Summary */}
           <Row layout={ColumnLayouts.TwoEqual}>
             <Column>
-              <Paragraph color={textMuted} fontSize="13px" lineHeight="1.5">
-                <strong>Notes:</strong> Thank you for your business! This official invoice is generated via @unlayer/react-elements for audit compliance.
+              <Paragraph color={textMuted} fontSize="12px" lineHeight="1.5">
+                Thank you for choosing <strong>{brandName}</strong>.<br />
+                If you have questions, contact billing@{brandName.toLowerCase().replace(/\s+/g, '')}.com
               </Paragraph>
             </Column>
             <Column>
-              <Paragraph color={textMuted} fontSize="13px" textAlign="right">
-                Subtotal: $276.00
+              <Paragraph color={textColor} fontSize="18px" fontWeight="bold" textAlign="right">
+                TOTAL: <span style={{ color: primaryColor }}>{totalAmount}</span>
               </Paragraph>
-              <Paragraph color={textMuted} fontSize="13px" textAlign="right">
-                Tax (8.25%): $22.77
-              </Paragraph>
-              <Heading level="h3" color={primaryColor} fontSize="20px" fontWeight="bold" textAlign="right">
-                Total Paid: {config.totalAmount || '$298.77'}
-              </Heading>
             </Column>
           </Row>
         </Column>
       </Row>
 
-      {/* Document Footer */}
+      {/* Footer Legal */}
       {config.showFooter && (
-        <Row padding="0 0 32px 0">
-          <Column
-            backgroundColor={isDark ? '#0f172a' : '#e2e8f0'}
-            borderRadius="0 0 16px 16px"
-            padding="16px 40px"
-          >
+        <Row padding="24px 0">
+          <Column>
             <Paragraph color={textMuted} fontSize="12px" textAlign="center">
-              Page 1 of 1 • Official Receipt for {brandName} • Generated with Unlayer Elements
+              © 2026 {companyName}. Official Invoice Document.<br />
+              Generated with @unlayer/react-elements Document Engine.
             </Paragraph>
           </Column>
         </Row>
@@ -179,22 +166,15 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
 };
 
 export const getOrderReceiptJsx = (config: TemplateCustomization): string => {
-  return `import { Document, Row, Column, Heading, Paragraph, Table, ColumnLayouts } from '@unlayer/react-elements';
+  return `import { Document, Row, Column, Heading, Paragraph, Table } from '@unlayer/react-elements';
 
-export const InvoiceDocument = () => (
-  <Document backgroundColor="#f1f5f9" contentWidth="680px">
-    <Row padding="24px 0">
-      <Column backgroundColor="#ffffff" borderRadius="16px" padding="32px 40px">
-        <Heading level="h2" color="${config.primaryColor}">${config.brandName || 'Acme Corp'}</Heading>
-        <Heading level="h3">INVOICE #${config.invoiceNumber || 'INV-2026-9842'}</Heading>
-        <Table
-          headers={["Item Description", "Qty", "Unit Price", "Total"]}
-          data={[
-            ["Elements Pro License", "1", "$149.00", "$149.00"],
-            ["Custom React Components", "2", "$49.00", "$98.00"]
-          ]}
-        />
-        <Heading level="h3" color="${config.primaryColor}">Total Paid: ${config.totalAmount || '$298.77'}</Heading>
+export const ReceiptDoc = () => (
+  <Document backgroundColor="${config.backgroundColor || '#f1f5f9'}" contentWidth="680px">
+    <Row padding="32px">
+      <Column backgroundColor="#ffffff" borderRadius="16px">
+        <Heading level="h2" color="${config.primaryColor}">${config.brandName || 'Brand'}</Heading>
+        <Paragraph color="#64748b">Invoice #${config.invoiceNumber || 'INV-2026'}</Paragraph>
+        <Table headers={['Item', 'Total']} data={[['Pro License', '${config.totalAmount || '$2,450.00'}']]} />
       </Column>
     </Row>
   </Document>

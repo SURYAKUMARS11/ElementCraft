@@ -21,12 +21,15 @@ interface Props {
 
 export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) => {
   const Container = mode === 'document' ? Body : Email;
-  const isDark = config.darkMode;
-  const bgColor = isDark ? '#0f172a' : config.backgroundColor || '#f8fafc';
+  const isDark = Boolean(config.darkMode);
+  
+  // Custom color overrides with dark/light fallbacks
+  const bgColor = config.backgroundColor || (isDark ? '#0f172a' : '#f8fafc');
   const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = isDark ? '#f8fafc' : config.textColor || '#1e293b';
+  const textColor = config.textColor || (isDark ? '#f8fafc' : '#1e293b');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#6366f1';
+
   const brandName = config.brandName || 'Antigravity SaaS';
   const recipientName = config.recipientName || 'Developer';
   const companyName = config.companyName || brandName;
