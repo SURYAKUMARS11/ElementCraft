@@ -60,7 +60,8 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
 
   return (
     <div className="landing-page-wrapper">
-      {/* Glow Orbs background */}
+      {/* Striped Diagonal Background Texture & Ambient Glow */}
+      <div className="striped-bg-overlay"></div>
       <div className="ambient-glow glow-1"></div>
       <div className="ambient-glow glow-2"></div>
 
@@ -69,7 +70,6 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
         <div className="hero-badge">
           <Sparkles size={16} className="text-amber" />
           <span>Code-First Email &amp; Document Engine</span>
-          <span className="badge-highlight">v2.0 Pro</span>
         </div>
 
         <h1 className="hero-title">
@@ -335,7 +335,6 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
         </div>
       </section>
 
-      {/* Footer */}
       {/* Footer */}
       <footer className="landing-footer">
         <div className="footer-container">
