@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { renderToHtml, renderToJson, renderToPlainText } from '@unlayer/react-elements';
 import type { TemplateDefinition, TemplateCustomization, RenderMode } from '../types/template';
 import { X, Copy, Check, Download, Code2, FileCode, Braces, AlignLeft } from 'lucide-react';
@@ -18,15 +18,15 @@ export const CodeExporterModal: React.FC<Props> = ({
   customization,
   renderMode,
 }) => {
+  // 1. All hooks MUST be declared unconditionally at the very top level of the component
   const [activeTab, setActiveTab] = useState<'html' | 'jsx' | 'json' | 'text'>('html');
   const [copied, setCopied] = useState(false);
 
-  if (!isOpen) return null;
-
   const Component = template.component;
 
-  // 1. Generate Compiled HTML
-  const htmlOutput = React.useMemo(() => {
+  // 2. Generate Compiled HTML (unconditional hook)
+  const htmlOutput = useMemo(() => {
+    if (!isOpen) return '';
     try {
       return renderToHtml(<Component config={customization} mode={renderMode} />, {
         title: template.name,
@@ -35,19 +35,21 @@ export const CodeExporterModal: React.FC<Props> = ({
     } catch (e) {
       return `<!-- Error rendering HTML: ${String(e)} -->`;
     }
-  }, [template, customization, renderMode]);
+  }, [isOpen, template, customization, renderMode, Component]);
 
-  // 2. Generate React Source JSX
-  const jsxOutput = React.useMemo(() => {
+  // 3. Generate React Source JSX (unconditional hook)
+  const jsxOutput = useMemo(() => {
+    if (!isOpen) return '';
     try {
       return template.getRawJsx(customization);
     } catch (e) {
       return `// Error generating JSX: ${String(e)}`;
     }
-  }, [template, customization]);
+  }, [isOpen, template, customization]);
 
-  // 3. Generate Unlayer JSON
-  const jsonOutput = React.useMemo(() => {
+  // 4. Generate Unlayer JSON (unconditional hook)
+  const jsonOutput = useMemo(() => {
+    if (!isOpen) return '';
     try {
       const designJson = renderToJson(<Component config={customization} mode={renderMode} />);
       return JSON.stringify(designJson, null, 2);
@@ -64,16 +66,20 @@ export const CodeExporterModal: React.FC<Props> = ({
         2
       );
     }
-  }, [template, customization, renderMode]);
+  }, [isOpen, template, customization, renderMode, Component]);
 
-  // 4. Generate Plain Text MIME
-  const textOutput = React.useMemo(() => {
+  // 5. Generate Plain Text MIME (unconditional hook)
+  const textOutput = useMemo(() => {
+    if (!isOpen) return '';
     try {
       return renderToPlainText(<Component config={customization} mode={renderMode} />);
     } catch (e) {
       return `Error generating plain text MIME: ${String(e)}`;
     }
-  }, [template, customization, renderMode]);
+  }, [isOpen, template, customization, renderMode, Component]);
+
+  // 6. Early return AFTER all hooks have been declared unconditionally
+  if (!isOpen) return null;
 
   const getCurrentCode = (): string => {
     switch (activeTab) {
