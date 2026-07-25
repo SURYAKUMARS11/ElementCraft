@@ -15,7 +15,6 @@ import {
   Check,
   ShieldCheck,
   Layers,
-  Award,
   ExternalLink,
   ChevronRight,
   Terminal,
@@ -67,9 +66,9 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-badge">
-          <Award size={16} className="text-amber" />
-          <span>Official Entry — Build with Unlayer Elements Challenge</span>
-          <span className="badge-highlight">$600 Prize Pool</span>
+          <Sparkles size={16} className="text-amber" />
+          <span>Code-First Email &amp; Document Engine</span>
+          <span className="badge-highlight">v2.0 Pro</span>
         </div>
 
         <h1 className="hero-title">
@@ -229,7 +228,7 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
       <section className="templates-showcase-section">
         <div className="section-heading">
           <span className="pill-category">ORIGINAL TEMPLATE SUITE</span>
-          <h2>5 Production-Ready Templates Built for the Challenge</h2>
+          <h2>5 Production-Ready Templates Built with React</h2>
           <p>Explore original designs engineered for high engagement and deliverability.</p>
         </div>
 
@@ -313,11 +312,11 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
         </div>
       </section>
 
-      {/* Submission CTA Banner */}
+      {/* CTA Banner */}
       <section className="submission-banner-section">
         <div className="banner-card">
           <div className="banner-content">
-            <span className="banner-badge">BUILD WITH ELEMENTS CHALLENGE</span>
+            <span className="banner-badge">UNLAYER ELEMENTS STUDIO</span>
             <h2>Ready to shape the future of email &amp; document templates?</h2>
             <p>Explore the full interactive studio, customize template presets, and export HTML/JSON code instantly.</p>
           </div>
@@ -344,7 +343,7 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
             <div className="brand-title">
               ElementCraft <span className="brand-tag">Studio</span>
             </div>
-            <p>Built with ❤️ using @unlayer/react-elements for the Unlayer Elements Challenge 2026.</p>
+            <p>Built with ❤️ using @unlayer/react-elements.</p>
           </div>
           <div className="footer-right">
             <a href="https://unlayer.com" target="_blank" rel="noreferrer">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ExternalLink, Award, FileCode2, Code, Sun, Moon, Home, Sliders, LayoutGrid, BookOpen } from 'lucide-react';
+import { Sparkles, ExternalLink, FileCode2, Code, Sun, Moon, Home, Sliders, LayoutGrid, BookOpen } from 'lucide-react';
 
 export type ActiveNavTab = 'landing' | 'studio' | 'gallery' | 'docs';
 
@@ -68,8 +68,8 @@ export const Header: React.FC<Props> = ({
       {/* Action Controls */}
       <div className="header-actions">
         <div className="header-badge-challenge">
-          <Award size={14} className="trophy-gold" />
-          <span>Challenge Entry</span>
+          <Sparkles size={14} className="trophy-gold" />
+          <span>v2.0 Pro</span>
         </div>
 
         <button className="theme-toggle-btn" onClick={onToggleTheme} title="Toggle Light/Dark Studio">
