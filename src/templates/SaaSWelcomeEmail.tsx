@@ -251,25 +251,61 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
   );
 };
 
-export const getSaaSWelcomeJsx = (config: TemplateCustomization): string => {
-  return `import { Email, Row, Column, Heading, Paragraph, Button, Image, Divider, Social, ColumnLayouts } from '@unlayer/react-elements';
+export const getSaaSWelcomeJsx = (c: TemplateCustomization): string => {
+  const isDark = Boolean(c.darkMode);
+  const bgColor = c.backgroundColor || (isDark ? '#0f172a' : '#f8fafc');
+  const cardBg = isDark ? '#1e293b' : '#ffffff';
+  const textColor = c.textColor || (isDark ? '#f8fafc' : '#1e293b');
+  const textMuted = isDark ? '#94a3b8' : '#64748b';
+  const primaryColor = c.primaryColor || '#6366f1';
 
-export const WelcomeEmail = () => (
-  <Email backgroundColor="${config.backgroundColor || '#f8fafc'}" contentWidth="600px">
-    <Row padding="24px 0">
+  return `import React from 'react';
+import { Email, Row, Column, Heading, Paragraph, Button, Divider, Social, ColumnLayouts } from '@unlayer/react-elements';
+
+export const SaaSWelcomeEmail = () => (
+  <Email backgroundColor="${bgColor}" contentWidth="600px">
+    <Row padding="24px 0 16px 0">
       <Column>
-        <Image src="${config.logoUrl}" alt="${config.brandName || 'Brand'}" width="140px" />
+        <Heading level="h2" color="${primaryColor}" fontSize="24px" fontWeight="bold">
+          ⚡ ${c.brandName || 'Antigravity SaaS'}
+        </Heading>
       </Column>
     </Row>
     <Row>
-      <Column backgroundColor="#ffffff" borderRadius="16px" padding="40px 32px">
-        <Heading level="h1" color="${config.textColor}">Welcome aboard, ${config.recipientName || 'Developer'}!</Heading>
-        <Paragraph color="#64748b">We're thrilled to have you join ${config.companyName || 'Brand'}. Your workspace is ready.</Paragraph>
-        <Button href="https://unlayer.com" backgroundColor="${config.primaryColor}" color="#ffffff" borderRadius="8px" padding="14px 28px">
+      <Column backgroundColor="${cardBg}" borderRadius="16px" padding="40px 32px">
+        <Heading level="h4" color="${primaryColor}" fontSize="14px" fontWeight="bold" textAlign="center">
+          🚀 WELCOME TO ${(c.brandName || 'ANTIGRAVITY').toUpperCase()}
+        </Heading>
+        <Heading level="h1" color="${textColor}" fontSize="30px" fontWeight="bold" textAlign="center">
+          Welcome aboard, ${c.recipientName || 'Developer'}!
+        </Heading>
+        <Paragraph color="${textMuted}" fontSize="16px" textAlign="center">
+          We're thrilled to have you join <strong>${c.companyName || 'Antigravity Cloud Inc'}</strong>.
+        </Paragraph>
+        <Divider containerPadding="24px 0" />
+      </Column>
+    </Row>
+    <Row layout={ColumnLayouts.ThreeEqual} padding="16px 0">
+      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
+        <Heading level="h4" color="${primaryColor}" textAlign="center">⚡</Heading>
+        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Instant Setup</Heading>
+      </Column>
+      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
+        <Heading level="h4" color="${primaryColor}" textAlign="center">🎨</Heading>
+        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Clean JSX APIs</Heading>
+      </Column>
+      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
+        <Heading level="h4" color="${primaryColor}" textAlign="center">📊</Heading>
+        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Real-Time Sync</Heading>
+      </Column>
+    </Row>
+    ${c.showCTA ? `<Row padding="16px 0">
+      <Column backgroundColor="${cardBg}" borderRadius="16px" padding="32px 24px">
+        <Button href="https://unlayer.com" backgroundColor="${primaryColor}" color="#ffffff" borderRadius="8px" padding="14px 28px">
           Launch Dashboard →
         </Button>
       </Column>
-    </Row>
+    </Row>` : ''}
   </Email>
 );`;
 };

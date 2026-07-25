@@ -165,16 +165,55 @@ export const OrderReceiptDoc: React.FC<Props> = ({ customization, mode = 'docume
   );
 };
 
-export const getOrderReceiptJsx = (config: TemplateCustomization): string => {
-  return `import { Document, Row, Column, Heading, Paragraph, Table } from '@unlayer/react-elements';
+export const getOrderReceiptJsx = (c: TemplateCustomization): string => {
+  const isDark = Boolean(c.darkMode);
+  const bgColor = c.backgroundColor || (isDark ? '#0f172a' : '#f1f5f9');
+  const cardBg = isDark ? '#1e293b' : '#ffffff';
+  const textColor = c.textColor || (isDark ? '#f8fafc' : '#0f172a');
+  const textMuted = isDark ? '#94a3b8' : '#64748b';
+  const primaryColor = c.primaryColor || '#059669';
+
+  return `import React from 'react';
+import { Document, Row, Column, Heading, Paragraph, Table, Divider, ColumnLayouts } from '@unlayer/react-elements';
 
 export const ReceiptDoc = () => (
-  <Document backgroundColor="${config.backgroundColor || '#f1f5f9'}" contentWidth="680px">
-    <Row padding="32px">
-      <Column backgroundColor="#ffffff" borderRadius="16px">
-        <Heading level="h2" color="${config.primaryColor}">${config.brandName || 'Brand'}</Heading>
-        <Paragraph color="#64748b">Invoice #${config.invoiceNumber || 'INV-2026'}</Paragraph>
-        <Table headers={['Item', 'Total']} data={[['Pro License', '${config.totalAmount || '$2,450.00'}']]} />
+  <Document backgroundColor="${bgColor}" contentWidth="680px">
+    <Row padding="24px 0 0 0">
+      <Column backgroundColor="${cardBg}" borderRadius="16px 16px 0 0" padding="32px 40px 20px 40px">
+        <Row layout={ColumnLayouts.TwoEqual}>
+          <Column>
+            <Heading level="h2" color="${primaryColor}" fontSize="26px" fontWeight="bold">${c.brandName || 'Acme Commerce'}</Heading>
+          </Column>
+          <Column>
+            <Heading level="h3" color="${textColor}" fontSize="22px" textAlign="right">INVOICE / RECEIPT</Heading>
+            <Paragraph color="${primaryColor}" fontSize="14px" fontWeight="bold" textAlign="right">#${c.invoiceNumber || 'INV-2026-9842'}</Paragraph>
+          </Column>
+        </Row>
+        <Divider containerPadding="20px 0" />
+        <Row layout={ColumnLayouts.TwoEqual}>
+          <Column>
+            <Paragraph color="${textMuted}" fontSize="11px" fontWeight="bold">BILLED TO:</Paragraph>
+            <Paragraph color="${textColor}" fontSize="14px" fontWeight="bold">${c.recipientName || 'Sarah Jenkins'}</Paragraph>
+            <Paragraph color="${textMuted}" fontSize="13px">${c.companyName || 'Apex Technologies LLC'}</Paragraph>
+          </Column>
+          <Column>
+            <Paragraph color="${textColor}" fontSize="14px" fontWeight="bold">Status: PAID IN FULL</Paragraph>
+            <Paragraph color="${textMuted}" fontSize="13px">Total Paid: ${c.totalAmount || '$298.77'}</Paragraph>
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+    <Row padding="0">
+      <Column backgroundColor="${cardBg}" borderRadius="0 0 16px 16px" padding="0 40px 32px 40px">
+        <Table headers={['ITEM DESCRIPTION', 'QTY', 'PRICE', 'TOTAL']} data={[['ElementCraft Pro License', '1', '$1,999.00', '$1,999.00']]} />
+        <Divider containerPadding="20px 0" />
+        <Row layout={ColumnLayouts.TwoEqual}>
+          <Column>
+            <Paragraph color="${textColor}" fontSize="18px" fontWeight="bold" textAlign="right">
+              TOTAL: <span style={{ color: '${primaryColor}' }}>${c.totalAmount || '$298.77'}</span>
+            </Paragraph>
+          </Column>
+        </Row>
       </Column>
     </Row>
   </Document>

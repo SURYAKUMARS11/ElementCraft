@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { renderToHtml, renderToJson, renderToPlainText } from '@unlayer/react-elements';
 import type { TemplateDefinition, TemplateCustomization, RenderMode } from '../types/template';
-import { X, Copy, Check, FileCode, Code, FileJson, FileText, Download } from 'lucide-react';
+import { X, Copy, Check, FileCode, Code, FileJson, FileText, Download, Globe, Mail, Printer } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -16,28 +16,34 @@ export const CodeExporterModal: React.FC<Props> = ({
   onClose,
   template,
   customization,
-  renderMode,
+  renderMode: initialRenderMode,
 }) => {
-  // 1. Declare active tab state at top level (unconditional hook)
   const [activeTab, setActiveTab] = useState<'html' | 'jsx' | 'json' | 'text'>('html');
+  const [exportMode, setExportMode] = useState<RenderMode>(initialRenderMode || 'email');
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (initialRenderMode) {
+      setExportMode(initialRenderMode);
+    }
+  }, [initialRenderMode]);
 
   const Component = template.component;
 
-  // 2. Generate Compiled HTML (unconditional hook)
+  // 1. Generate Compiled HTML Output
   const htmlOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      return renderToHtml(<Component customization={customization} mode={renderMode} />, {
+      return renderToHtml(<Component customization={customization} mode={exportMode} />, {
         title: template.name,
-        mode: renderMode,
+        mode: exportMode,
       });
     } catch (e) {
       return `<!-- Error rendering HTML: ${String(e)} -->`;
     }
-  }, [isOpen, template, customization, renderMode, Component]);
+  }, [isOpen, template, customization, exportMode, Component]);
 
-  // 3. Generate React Source JSX (unconditional hook)
+  // 2. Generate React Source JSX Code
   const jsxOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
@@ -47,11 +53,11 @@ export const CodeExporterModal: React.FC<Props> = ({
     }
   }, [isOpen, template, customization]);
 
-  // 4. Generate Unlayer JSON (unconditional hook)
+  // 3. Generate Unlayer JSON Schema
   const jsonOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      const designJson = renderToJson(<Component customization={customization} mode={renderMode} />);
+      const designJson = renderToJson(<Component customization={customization} mode={exportMode} />);
       return JSON.stringify(designJson, null, 2);
     } catch (e) {
       return JSON.stringify(
@@ -66,19 +72,18 @@ export const CodeExporterModal: React.FC<Props> = ({
         2
       );
     }
-  }, [isOpen, template, customization, renderMode, Component]);
+  }, [isOpen, template, customization, exportMode, Component]);
 
-  // 5. Generate Plain Text MIME (unconditional hook)
+  // 4. Generate Plain Text MIME
   const textOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      return renderToPlainText(<Component customization={customization} mode={renderMode} />);
+      return renderToPlainText(<Component customization={customization} mode={exportMode} />);
     } catch (e) {
       return `Error generating plain text MIME: ${String(e)}`;
     }
-  }, [isOpen, template, customization, renderMode, Component]);
+  }, [isOpen, template, customization, exportMode, Component]);
 
-  // Conditional early return AFTER all hooks have been declared at top level
   if (!isOpen) return null;
 
   const currentCode =
@@ -103,7 +108,7 @@ export const CodeExporterModal: React.FC<Props> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${template.id}-export.${ext}`;
+    a.download = `${template.id}-${exportMode}.${ext}`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -118,10 +123,36 @@ export const CodeExporterModal: React.FC<Props> = ({
             <div>
               <h2>Template Export Center</h2>
               <p className="subtitle">
-                {template.name} • {renderMode.toUpperCase()} Spec
+                {template.name} • {exportMode.toUpperCase()} Spec
               </p>
             </div>
           </div>
+
+          {/* Mode Switcher in Exporter */}
+          <div className="exporter-mode-switch">
+            <button
+              className={`mode-pill ${exportMode === 'web' ? 'active' : ''}`}
+              onClick={() => setExportMode('web')}
+              title="Web Page Spec"
+            >
+              <Globe size={13} /> Web
+            </button>
+            <button
+              className={`mode-pill ${exportMode === 'email' ? 'active' : ''}`}
+              onClick={() => setExportMode('email')}
+              title="Email Table Spec"
+            >
+              <Mail size={13} /> Email
+            </button>
+            <button
+              className={`mode-pill ${exportMode === 'document' ? 'active' : ''}`}
+              onClick={() => setExportMode('document')}
+              title="PDF Print Spec"
+            >
+              <Printer size={13} /> PDF
+            </button>
+          </div>
+
           <button className="btn-close-drawer" onClick={onClose}>
             <X size={18} />
           </button>
@@ -160,7 +191,7 @@ export const CodeExporterModal: React.FC<Props> = ({
           <div className="code-toolbar">
             <span className="file-tag">
               {activeTab === 'html'
-                ? 'compiled-output.html'
+                ? `compiled-${exportMode}.html`
                 : activeTab === 'jsx'
                 ? `${template.id}.tsx`
                 : activeTab === 'json'
