@@ -13,7 +13,6 @@ export const LiveIframeHtml: React.FC<LiveIframeProps> = ({ html, title, classNa
       srcDoc={html}
       title={title}
       className={className}
-      sandbox="allow-popups allow-same-origin allow-scripts allow-forms"
     />
   );
 };
