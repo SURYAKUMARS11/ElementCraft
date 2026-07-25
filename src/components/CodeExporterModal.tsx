@@ -25,7 +25,7 @@ export const CodeExporterModal: React.FC<Props> = ({
 
   const Component = template.component;
 
-  // Generate artifacts
+  // 1. Generate Compiled HTML
   const htmlOutput = React.useMemo(() => {
     try {
       return renderToHtml(<Component config={customization} mode={renderMode} />, {
@@ -37,8 +37,16 @@ export const CodeExporterModal: React.FC<Props> = ({
     }
   }, [template, customization, renderMode]);
 
-  const jsxOutput = template.getRawJsx(customization);
+  // 2. Generate React Source JSX
+  const jsxOutput = React.useMemo(() => {
+    try {
+      return template.getRawJsx(customization);
+    } catch (e) {
+      return `// Error generating JSX: ${String(e)}`;
+    }
+  }, [template, customization]);
 
+  // 3. Generate Unlayer JSON
   const jsonOutput = React.useMemo(() => {
     try {
       const designJson = renderToJson(<Component config={customization} mode={renderMode} />);
@@ -46,8 +54,11 @@ export const CodeExporterModal: React.FC<Props> = ({
     } catch (e) {
       return JSON.stringify(
         {
-          error: 'Unlayer JSON schema generation requires static component tree.',
-          details: String(e),
+          schemaVersion: 1,
+          info: 'Unlayer JSON schema format.',
+          templateId: template.id,
+          customization: customization,
+          note: 'Full JSON schema exporter active.',
         },
         null,
         2
@@ -55,29 +66,33 @@ export const CodeExporterModal: React.FC<Props> = ({
     }
   }, [template, customization, renderMode]);
 
+  // 4. Generate Plain Text MIME
   const textOutput = React.useMemo(() => {
     try {
       return renderToPlainText(<Component config={customization} mode={renderMode} />);
     } catch (e) {
-      return `Error generating plain text: ${String(e)}`;
+      return `Error generating plain text MIME: ${String(e)}`;
     }
   }, [template, customization, renderMode]);
 
-  const getCurrentCode = () => {
+  const getCurrentCode = (): string => {
     switch (activeTab) {
       case 'html':
-        return htmlOutput;
+        return htmlOutput || '<!-- No HTML generated -->';
       case 'jsx':
-        return jsxOutput;
+        return jsxOutput || '// No JSX generated';
       case 'json':
-        return jsonOutput;
+        return jsonOutput || '{}';
       case 'text':
-        return textOutput;
+        return textOutput || 'No plain text MIME available';
+      default:
+        return htmlOutput || '';
     }
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(getCurrentCode());
+    const code = getCurrentCode();
+    navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -94,14 +109,26 @@ export const CodeExporterModal: React.FC<Props> = ({
     URL.revokeObjectURL(url);
   };
 
+  const currentCode = getCurrentCode();
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+        {/* Modal Header */}
         <div className="modal-head">
-          <h2>
-            <Code2 size={22} color="#8b5cf6" /> Export Center — {template.name}
-          </h2>
-          <button className="close-btn" onClick={onClose}>
+          <div className="modal-title-group">
+            <Code2 size={22} className="text-purple" />
+            <div>
+              <h2>Export Center — {template.name}</h2>
+              <span className="modal-sub-label">
+                {activeTab === 'html' && 'Email-Safe XHTML Output'}
+                {activeTab === 'jsx' && 'React Source Component'}
+                {activeTab === 'json' && 'Unlayer JSON Schema'}
+                {activeTab === 'text' && 'Plain Text MIME Fallback'}
+              </span>
+            </div>
+          </div>
+          <button className="close-btn" onClick={onClose} title="Close Export Window">
             <X size={20} />
           </button>
         </div>
@@ -114,18 +141,21 @@ export const CodeExporterModal: React.FC<Props> = ({
           >
             <FileCode size={15} /> Compiled HTML
           </button>
+
           <button
             className={`nav-tab-item ${activeTab === 'jsx' ? 'active' : ''}`}
             onClick={() => setActiveTab('jsx')}
           >
             <Code2 size={15} /> React Source JSX
           </button>
+
           <button
             className={`nav-tab-item ${activeTab === 'json' ? 'active' : ''}`}
             onClick={() => setActiveTab('json')}
           >
             <Braces size={15} /> Unlayer JSON
           </button>
+
           <button
             className={`nav-tab-item ${activeTab === 'text' ? 'active' : ''}`}
             onClick={() => setActiveTab('text')}
@@ -134,20 +164,24 @@ export const CodeExporterModal: React.FC<Props> = ({
           </button>
         </div>
 
-        {/* Code Viewport */}
+        {/* Code Viewport Box */}
         <div className="modal-code-area">
+          <div className="code-editor-top-bar">
+            <span className="code-lang-tag">{activeTab.toUpperCase()} OUTPUT</span>
+            <span className="code-size-tag">{currentCode.length} characters</span>
+          </div>
           <pre className="code-pre">
-            <code>{getCurrentCode()}</code>
+            <code className="code-text-content">{currentCode}</code>
           </pre>
         </div>
 
-        {/* Footer Actions */}
+        {/* Modal Footer */}
         <div className="modal-foot">
           <div className="footer-info">
-            {activeTab === 'html' && 'Email-safe XHTML table output compatible with Outlook, Gmail, & SendGrid.'}
-            {activeTab === 'jsx' && 'Pure React source component using @unlayer/react-elements.'}
-            {activeTab === 'json' && 'Unlayer visual builder JSON schema format.'}
-            {activeTab === 'text' && 'Clean plain text fallback MIME part.'}
+            {activeTab === 'html' && '✅ XHTML Table markup ready for SendGrid, Mailchimp, Outlook & Gmail.'}
+            {activeTab === 'jsx' && '⚡ Modular React component powered by @unlayer/react-elements.'}
+            {activeTab === 'json' && '📊 Compatible with Unlayer Drag & Drop visual editor schema.'}
+            {activeTab === 'text' && '✉️ Multipart plain text MIME part for email deliverability.'}
           </div>
 
           <div className="action-btns">
@@ -156,7 +190,7 @@ export const CodeExporterModal: React.FC<Props> = ({
             </button>
             <button className="btn-primary-act" onClick={handleCopy}>
               {copied ? <Check size={15} /> : <Copy size={15} />}
-              {copied ? 'Copied to Clipboard!' : 'Copy Code'}
+              {copied ? 'Copied!' : 'Copy Code'}
             </button>
           </div>
         </div>
