@@ -21,15 +21,15 @@ export const EventInviteEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
   const Container = mode === 'document' ? Body : Email;
   const isDark = Boolean(config.darkMode);
 
-  const bgColor = config.backgroundColor || (isDark ? '#090514' : '#faf5ff');
+  const bgColor = config.backgroundColor ?? (isDark ? '#090514' : '#faf5ff');
   const cardBg = isDark ? '#140c2a' : '#ffffff';
-  const textColor = config.textColor || (isDark ? '#f3e8ff' : '#1e1b4b');
+  const textColor = config.textColor ?? (isDark ? '#f3e8ff' : '#1e1b4b');
   const textMuted = isDark ? '#a855f7' : '#6b21a8';
   const primaryColor = config.primaryColor || '#8b5cf6';
 
-  const brandName = config.brandName || 'Elements Summit';
-  const recipientName = config.recipientName || 'Alex Mercer';
-  const eventName = config.eventName || 'Global Developers Conference 2026';
+  const brandName = config.brandName ?? 'Elements Summit';
+  const recipientName = config.recipientName ?? 'Alex Mercer';
+  const eventName = config.eventName ?? 'Global Developers Conference 2026';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>

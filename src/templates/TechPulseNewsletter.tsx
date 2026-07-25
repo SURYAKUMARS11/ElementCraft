@@ -21,13 +21,13 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
   const Container = mode === 'document' ? Body : Email;
   const isDark = Boolean(config.darkMode);
 
-  const bgColor = config.backgroundColor || (isDark ? '#090d16' : '#f3f4f6');
+  const bgColor = config.backgroundColor ?? (isDark ? '#090d16' : '#f3f4f6');
   const cardBg = isDark ? '#111827' : '#ffffff';
-  const textColor = config.textColor || (isDark ? '#f9fafb' : '#111827');
+  const textColor = config.textColor ?? (isDark ? '#f9fafb' : '#111827');
   const textMuted = isDark ? '#9ca3af' : '#4b5563';
   const primaryColor = config.primaryColor || '#ec4899';
 
-  const brandName = config.brandName || 'Frontend Pulse';
+  const brandName = config.brandName ?? 'Frontend Pulse';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="620px" mode={mode}>

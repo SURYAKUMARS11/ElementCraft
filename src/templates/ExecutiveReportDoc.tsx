@@ -20,13 +20,13 @@ export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' 
   const Container = mode === 'email' ? Body : Document;
   const isDark = Boolean(config.darkMode);
 
-  const bgColor = config.backgroundColor || (isDark ? '#0b0f19' : '#f8fafc');
+  const bgColor = config.backgroundColor ?? (isDark ? '#0b0f19' : '#f8fafc');
   const cardBg = isDark ? '#161e2e' : '#ffffff';
-  const textColor = config.textColor || (isDark ? '#f1f5f9' : '#0f172a');
+  const textColor = config.textColor ?? (isDark ? '#f1f5f9' : '#0f172a');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = config.primaryColor || '#2563eb';
 
-  const brandName = config.brandName || 'Acme Enterprise';
+  const brandName = config.brandName ?? 'Acme Enterprise';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="700px" mode={mode}>
