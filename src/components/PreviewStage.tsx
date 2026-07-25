@@ -37,6 +37,7 @@ export const PreviewStage: React.FC<Props> = ({
   };
 
   const isCompare = stageMode === 'compare';
+  const customizationKey = JSON.stringify(customization);
 
   return (
     <main className="preview-canvas-stage">
@@ -117,6 +118,7 @@ export const PreviewStage: React.FC<Props> = ({
                 <span className="cat-pill email">Web Spec</span>
               </div>
               <iframe
+                key={`stage-web-${template.id}-${customizationKey}`}
                 srcDoc={getRenderedHtmlForMode('web')}
                 title="Web Renderer Preview"
                 className="compare-iframe"
@@ -131,6 +133,7 @@ export const PreviewStage: React.FC<Props> = ({
                 <span className="cat-pill email">Table Spec</span>
               </div>
               <iframe
+                key={`stage-email-${template.id}-${customizationKey}`}
                 srcDoc={getRenderedHtmlForMode('email')}
                 title="Email Renderer Preview"
                 className="compare-iframe"
@@ -145,6 +148,7 @@ export const PreviewStage: React.FC<Props> = ({
                 <span className="cat-pill document">PDF Print Spec</span>
               </div>
               <iframe
+                key={`stage-doc-${template.id}-${customizationKey}`}
                 srcDoc={getRenderedHtmlForMode('document')}
                 title="Document Renderer Preview"
                 className="compare-iframe"
@@ -170,7 +174,7 @@ export const PreviewStage: React.FC<Props> = ({
             </div>
 
             <iframe
-              key={`${template.id}-${stageMode}-${customization.darkMode}-${customization.primaryColor}`}
+              key={`stage-single-${template.id}-${stageMode}-${customizationKey}`}
               srcDoc={getRenderedHtmlForMode(stageMode as RenderMode)}
               title="Rendered Template Stage"
               className="single-stage-iframe"

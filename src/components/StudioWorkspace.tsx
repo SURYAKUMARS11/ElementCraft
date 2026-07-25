@@ -71,6 +71,8 @@ export const StudioWorkspace: React.FC<Props> = ({
   };
 
   const isCompare = stageMode === 'compare';
+  // Create a unique key hash for customization so every input update forces the iframe to re-render live!
+  const customizationKey = JSON.stringify(customization);
 
   return (
     <div className="standalone-studio-app">
@@ -263,7 +265,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                       />
                       <input
                         type="text"
-                        value={customization.backgroundColor}
+                        value={customization.backgroundColor || '#ffffff'}
                         onChange={(e) => updateProp('backgroundColor', e.target.value)}
                         className="prop-text-input color-hex"
                       />
@@ -281,7 +283,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                       />
                       <input
                         type="text"
-                        value={customization.textColor}
+                        value={customization.textColor || '#1e293b'}
                         onChange={(e) => updateProp('textColor', e.target.value)}
                         className="prop-text-input color-hex"
                       />
@@ -413,6 +415,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <span className="badge-tag web">HTML5 FLEXBOX</span>
                   </div>
                   <iframe
+                    key={`comp-web-${selectedTemplate.id}-${customizationKey}`}
                     srcDoc={getRenderedHtml('web')}
                     title="Web Renderer"
                     className="compare-card-iframe"
@@ -428,6 +431,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <span className="badge-tag email">XHTML TABLES</span>
                   </div>
                   <iframe
+                    key={`comp-email-${selectedTemplate.id}-${customizationKey}`}
                     srcDoc={getRenderedHtml('email')}
                     title="Email Renderer"
                     className="compare-card-iframe"
@@ -443,6 +447,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <span className="badge-tag document">PDF / PRINT SPEC</span>
                   </div>
                   <iframe
+                    key={`comp-doc-${selectedTemplate.id}-${customizationKey}`}
                     srcDoc={getRenderedHtml('document')}
                     title="Document Renderer"
                     className="compare-card-iframe"
@@ -469,7 +474,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                 </div>
 
                 <iframe
-                  key={`studio-${selectedTemplate.id}-${stageMode}-${customization.darkMode}-${customization.primaryColor}`}
+                  key={`single-${selectedTemplate.id}-${stageMode}-${customizationKey}`}
                   srcDoc={getRenderedHtml(stageMode as RenderMode)}
                   title="Studio Stage Render"
                   className="viewport-stage-iframe"
