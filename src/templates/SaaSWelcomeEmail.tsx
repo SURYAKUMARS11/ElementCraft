@@ -23,7 +23,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
   const Container = mode === 'document' ? Body : Email;
   const isDark = Boolean(config.darkMode);
   
-  // Use nullish coalescing (??) so user typed values (even empty strings) are never overwritten by falsy OR (||) defaults
+  // Custom color overrides with dark/light fallbacks
   const bgColor = config.backgroundColor ?? (isDark ? '#0f172a' : '#f8fafc');
   const cardBg = isDark ? '#1e293b' : '#ffffff';
   const textColor = config.textColor ?? (isDark ? '#f8fafc' : '#1e293b');
@@ -31,8 +31,8 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
   const primaryColor = config.primaryColor || '#6366f1';
 
   const brandName = config.brandName ?? 'Antigravity SaaS';
-  const recipientName = config.recipientName ?? 'Developer';
-  const companyName = config.companyName ?? brandName;
+  const recipientName = config.recipientName ?? 'Alex Mercer';
+  const companyName = config.companyName ?? 'Antigravity Cloud Inc';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
@@ -260,7 +260,7 @@ export const WelcomeEmail = () => (
     <Row>
       <Column backgroundColor="#ffffff" borderRadius="16px" padding="40px 32px">
         <Heading level="h1" color="${config.textColor}">Welcome aboard, ${config.recipientName || 'Developer'}!</Heading>
-        <Paragraph color="#64748b">We're thrilled to have you join ${config.brandName || 'Brand'}. Your workspace is ready.</Paragraph>
+        <Paragraph color="#64748b">We're thrilled to have you join ${config.companyName || 'Brand'}. Your workspace is ready.</Paragraph>
         <Button href="https://unlayer.com" backgroundColor="${config.primaryColor}" color="#ffffff" borderRadius="8px" padding="14px 28px">
           Launch Dashboard →
         </Button>

@@ -13,10 +13,20 @@ export const LiveIframeHtml: React.FC<LiveIframeProps> = ({ html, title, classNa
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    console.log(`🚀 [LiveIframeHtml] Programmatically updating srcdoc for "${title}" (length: ${html?.length})`);
-    
-    // Assigning srcdoc programmatically via ref forces browser to re-parse HTML document
-    iframe.srcdoc = html || '';
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (doc) {
+        console.log(`⚡ [LiveIframeHtml] Writing document live for "${title}" (length: ${html?.length})`);
+        doc.open();
+        doc.write(html || '');
+        doc.close();
+      } else {
+        iframe.srcdoc = html || '';
+      }
+    } catch (err) {
+      console.warn(`⚠️ [LiveIframeHtml] doc.write fallback to srcdoc for "${title}":`, err);
+      iframe.srcdoc = html || '';
+    }
   }, [html, title]);
 
   return (
