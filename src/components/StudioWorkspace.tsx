@@ -49,7 +49,7 @@ export const StudioWorkspace: React.FC<Props> = ({
   onToggleTheme,
   onOpenExporter,
 }) => {
-  const [stageMode, setStageMode] = useState<StageViewMode>('compare');
+  const [stageMode, setStageMode] = useState<StageViewMode>('web');
   const [deviceFrame, setDeviceFrame] = useState<DeviceFrame>('desktop');
   const [showInspector, setShowInspector] = useState(true);
   const [activeAccordion, setActiveAccordion] = useState<'theme' | 'data' | 'blocks'>('theme');
