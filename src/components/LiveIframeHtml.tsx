@@ -11,13 +11,16 @@ export const LiveIframeHtml: React.FC<LiveIframeProps> = ({ html, title, classNa
   const blobUrl = useMemo(() => {
     if (!html) return undefined;
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    return URL.createObjectURL(blob);
-  }, [html]);
+    const url = URL.createObjectURL(blob);
+    console.log(`🖼️ [LiveIframeHtml] New Blob URL created for "${title}":`, url, `(html length: ${html.length})`);
+    return url;
+  }, [html, title]);
 
   // Clean up Blob URLs on change or unmount
   useEffect(() => {
     return () => {
       if (blobUrl) {
+        console.log(`🧹 [LiveIframeHtml] Revoking Blob URL:`, blobUrl);
         URL.revokeObjectURL(blobUrl);
       }
     };

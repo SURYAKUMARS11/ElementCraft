@@ -57,16 +57,28 @@ export const StudioWorkspace: React.FC<Props> = ({
   const Component = selectedTemplate.component;
 
   const updateProp = (key: keyof TemplateCustomization, value: any) => {
-    onCustomizationChange({ ...customization, [key]: value });
+    console.log(`⚙️ [StudioWorkspace] updateProp called for "${key}" ->`, value);
+    const updated = { ...customization, [key]: value };
+    onCustomizationChange(updated);
   };
 
   const getRenderedHtml = (mode: RenderMode) => {
     try {
-      return renderToHtml(<Component config={customization} mode={mode} />, {
+      console.log(`⚡ [StudioWorkspace] Rendering template "${selectedTemplate.id}" mode "${mode}" with props:`, {
+        brandName: customization.brandName,
+        recipientName: customization.recipientName,
+        primaryColor: customization.primaryColor,
+        darkMode: customization.darkMode,
+      });
+
+      const htmlResult = renderToHtml(<Component config={customization} mode={mode} />, {
         title: selectedTemplate.name,
         mode: mode,
       });
+
+      return htmlResult;
     } catch (err) {
+      console.error(`❌ [StudioWorkspace] Error rendering template mode "${mode}":`, err);
       return `<div style="padding:20px;color:red;">Error rendering template: ${String(err)}</div>`;
     }
   };
