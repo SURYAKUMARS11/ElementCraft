@@ -64,19 +64,10 @@ export const StudioWorkspace: React.FC<Props> = ({
 
   const getRenderedHtml = (mode: RenderMode) => {
     try {
-      console.log(`⚡ [StudioWorkspace] Rendering template "${selectedTemplate.id}" mode "${mode}" with props:`, {
-        brandName: customization.brandName,
-        recipientName: customization.recipientName,
-        primaryColor: customization.primaryColor,
-        darkMode: customization.darkMode,
-      });
-
-      const htmlResult = renderToHtml(<Component config={customization} mode={mode} />, {
+      return renderToHtml(<Component config={customization} mode={mode} />, {
         title: selectedTemplate.name,
         mode: mode,
       });
-
-      return htmlResult;
     } catch (err) {
       console.error(`❌ [StudioWorkspace] Error rendering template mode "${mode}":`, err);
       return `<div style="padding:20px;color:red;">Error rendering template: ${String(err)}</div>`;
@@ -252,13 +243,13 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <div className="color-picker-input-group">
                       <input
                         type="color"
-                        value={customization.primaryColor}
+                        value={customization.primaryColor || '#6366f1'}
                         onChange={(e) => updateProp('primaryColor', e.target.value)}
                         className="color-swatch-box"
                       />
                       <input
                         type="text"
-                        value={customization.primaryColor}
+                        value={customization.primaryColor || ''}
                         onChange={(e) => updateProp('primaryColor', e.target.value)}
                         className="prop-text-input color-hex"
                       />
@@ -276,7 +267,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                       />
                       <input
                         type="text"
-                        value={customization.backgroundColor || '#ffffff'}
+                        value={customization.backgroundColor || ''}
                         onChange={(e) => updateProp('backgroundColor', e.target.value)}
                         className="prop-text-input color-hex"
                       />
@@ -294,7 +285,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                       />
                       <input
                         type="text"
-                        value={customization.textColor || '#1e293b'}
+                        value={customization.textColor || ''}
                         onChange={(e) => updateProp('textColor', e.target.value)}
                         className="prop-text-input color-hex"
                       />
@@ -310,7 +301,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <label className="prop-label">Brand / App Name</label>
                     <input
                       type="text"
-                      value={customization.brandName}
+                      value={customization.brandName ?? ''}
                       onChange={(e) => updateProp('brandName', e.target.value)}
                       className="prop-text-input"
                     />
@@ -320,7 +311,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <label className="prop-label">Recipient Name</label>
                     <input
                       type="text"
-                      value={customization.recipientName}
+                      value={customization.recipientName ?? ''}
                       onChange={(e) => updateProp('recipientName', e.target.value)}
                       className="prop-text-input"
                     />
@@ -330,42 +321,54 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <label className="prop-label">Company / Organization</label>
                     <input
                       type="text"
-                      value={customization.companyName}
+                      value={customization.companyName ?? ''}
                       onChange={(e) => updateProp('companyName', e.target.value)}
                       className="prop-text-input"
                     />
                   </div>
 
-                  {customization.invoiceNumber !== undefined && (
+                  {(selectedTemplate.id === 'order-receipt' || customization.invoiceNumber !== undefined) && (
                     <div className="prop-field">
                       <label className="prop-label">Invoice Number</label>
                       <input
                         type="text"
-                        value={customization.invoiceNumber}
+                        value={customization.invoiceNumber ?? 'INV-2026-9842'}
                         onChange={(e) => updateProp('invoiceNumber', e.target.value)}
                         className="prop-text-input"
                       />
                     </div>
                   )}
 
-                  {customization.totalAmount !== undefined && (
+                  {(selectedTemplate.id === 'order-receipt' || customization.totalAmount !== undefined) && (
                     <div className="prop-field">
                       <label className="prop-label">Total Amount</label>
                       <input
                         type="text"
-                        value={customization.totalAmount}
+                        value={customization.totalAmount ?? '$298.77'}
                         onChange={(e) => updateProp('totalAmount', e.target.value)}
                         className="prop-text-input"
                       />
                     </div>
                   )}
 
-                  {customization.eventName !== undefined && (
+                  {(selectedTemplate.id === 'tech-newsletter' || customization.issueNumber !== undefined) && (
+                    <div className="prop-field">
+                      <label className="prop-label">Issue Number</label>
+                      <input
+                        type="text"
+                        value={customization.issueNumber ?? '42'}
+                        onChange={(e) => updateProp('issueNumber', e.target.value)}
+                        className="prop-text-input"
+                      />
+                    </div>
+                  )}
+
+                  {(selectedTemplate.id === 'event-invite' || customization.eventName !== undefined) && (
                     <div className="prop-field">
                       <label className="prop-label">Event / Conference</label>
                       <input
                         type="text"
-                        value={customization.eventName}
+                        value={customization.eventName ?? 'Unlayer Elements Global Summit 2026'}
                         onChange={(e) => updateProp('eventName', e.target.value)}
                         className="prop-text-input"
                       />
@@ -382,7 +385,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <input
                       type="checkbox"
                       id="toggle-cta"
-                      checked={customization.showCTA}
+                      checked={Boolean(customization.showCTA)}
                       onChange={(e) => updateProp('showCTA', e.target.checked)}
                     />
                   </div>
@@ -392,7 +395,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <input
                       type="checkbox"
                       id="toggle-socials"
-                      checked={customization.showSocials}
+                      checked={Boolean(customization.showSocials)}
                       onChange={(e) => updateProp('showSocials', e.target.checked)}
                     />
                   </div>
@@ -402,7 +405,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <input
                       type="checkbox"
                       id="toggle-footer"
-                      checked={customization.showFooter}
+                      checked={Boolean(customization.showFooter)}
                       onChange={(e) => updateProp('showFooter', e.target.checked)}
                     />
                   </div>
