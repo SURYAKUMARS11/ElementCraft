@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TEMPLATES } from './templates';
-import type { TemplateDefinition, TemplateCustomization, RenderMode, DeviceFrame } from './types/template';
+import type { TemplateDefinition, TemplateCustomization, RenderMode } from './types/template';
 import { Header } from './components/Header';
 import type { ActiveNavTab } from './components/Header';
 import { LandingShowcase } from './components/LandingShowcase';
 import { TemplateGalleryView } from './components/TemplateGalleryView';
 import { DocsView } from './components/DocsView';
-import { TemplateSelector } from './components/TemplateSelector';
-import { CustomizerSidebar } from './components/CustomizerSidebar';
-import { PreviewStage } from './components/PreviewStage';
-import type { StageViewMode } from './components/PreviewStage';
+import { StudioWorkspace } from './components/StudioWorkspace';
 import { CodeExporterModal } from './components/CodeExporterModal';
 import './styles/studio.css';
 
@@ -20,8 +17,6 @@ export function App() {
   const [customization, setCustomization] = useState<TemplateCustomization>(
     TEMPLATES[0].defaultCustomization
   );
-  const [stageMode, setStageMode] = useState<StageViewMode>('compare');
-  const [deviceFrame, setDeviceFrame] = useState<DeviceFrame>('desktop');
   const [exporterOpen, setExporterOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -52,64 +47,50 @@ export function App() {
     setCustomization(selectedTemplate.defaultCustomization);
   };
 
-  const activeRenderMode: RenderMode = stageMode === 'compare' ? 'email' : stageMode;
+  const activeRenderMode: RenderMode = selectedTemplate.recommendedMode;
 
   return (
     <div className="studio-app">
-      {/* Top Header Navbar */}
-      <Header
-        activeTab={activeTab}
-        onSelectTab={setActiveTab}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-        onOpenExporter={() => setExporterOpen(true)}
-      />
-
-      {/* Main Content Area based on Active Tab */}
-      {activeTab === 'landing' && (
-        <LandingShowcase
-          onLaunchStudio={handleLaunchStudioWithTemplate}
+      {/* 1. STANDALONE FULL-SCREEN STUDIO WORKSPACE PAGE */}
+      {activeTab === 'studio' ? (
+        <StudioWorkspace
+          onBackToHome={() => setActiveTab('landing')}
+          selectedTemplate={selectedTemplate}
+          onSelectTemplate={handleSelectTemplate}
+          customization={customization}
+          onCustomizationChange={setCustomization}
+          onResetCustomization={handleResetCustomization}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
           onOpenExporter={() => setExporterOpen(true)}
         />
-      )}
-
-      {activeTab === 'gallery' && (
-        <TemplateGalleryView onSelectAndLaunch={handleLaunchStudioWithTemplate} />
-      )}
-
-      {activeTab === 'docs' && <DocsView />}
-
-      {activeTab === 'studio' && (
+      ) : (
+        /* 2. LANDING SHOWCASE & WEBSITE PAGES WITH LANDING HEADER */
         <>
-          {/* Preset & Category Compact Bar */}
-          <TemplateSelector
-            selectedTemplate={selectedTemplate}
-            onSelectTemplate={handleSelectTemplate}
+          <Header
+            activeTab={activeTab}
+            onSelectTab={setActiveTab}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
+            onOpenExporter={() => setExporterOpen(true)}
           />
 
-          {/* Studio Workspace Area */}
-          <div className="studio-workspace-area">
-            {/* Left Form Editor */}
-            <CustomizerSidebar
-              customization={customization}
-              onChange={setCustomization}
-              onReset={handleResetCustomization}
+          {activeTab === 'landing' && (
+            <LandingShowcase
+              onLaunchStudio={handleLaunchStudioWithTemplate}
+              onOpenExporter={() => setExporterOpen(true)}
             />
+          )}
 
-            {/* Right Preview Stage */}
-            <PreviewStage
-              template={selectedTemplate}
-              customization={customization}
-              stageMode={stageMode}
-              onStageModeChange={setStageMode}
-              deviceFrame={deviceFrame}
-              onDeviceFrameChange={setDeviceFrame}
-            />
-          </div>
+          {activeTab === 'gallery' && (
+            <TemplateGalleryView onSelectAndLaunch={handleLaunchStudioWithTemplate} />
+          )}
+
+          {activeTab === 'docs' && <DocsView />}
         </>
       )}
 
-      {/* Export Center Modal */}
+      {/* Code Export Center Drawer */}
       <CodeExporterModal
         isOpen={exporterOpen}
         onClose={() => setExporterOpen(false)}
