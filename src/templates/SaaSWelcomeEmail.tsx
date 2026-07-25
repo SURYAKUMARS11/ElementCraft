@@ -15,33 +15,33 @@ import {
 import type { TemplateCustomization, RenderMode } from '../types/template';
 
 interface Props {
-  config: TemplateCustomization;
+  customization: TemplateCustomization;
   mode?: RenderMode;
 }
 
-export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) => {
+export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email' }) => {
   const Container = mode === 'document' ? Body : Email;
-  const isDark = Boolean(config.darkMode);
+  const isDark = Boolean(customization.darkMode);
   
   // Custom color overrides with dark/light fallbacks
-  const bgColor = config.backgroundColor ?? (isDark ? '#0f172a' : '#f8fafc');
+  const bgColor = customization.backgroundColor || (isDark ? '#0f172a' : '#f8fafc');
   const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = config.textColor ?? (isDark ? '#f8fafc' : '#1e293b');
+  const textColor = customization.textColor || (isDark ? '#f8fafc' : '#1e293b');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
-  const primaryColor = config.primaryColor || '#6366f1';
+  const primaryColor = customization.primaryColor || '#6366f1';
 
-  const brandName = config.brandName ?? 'Antigravity SaaS';
-  const recipientName = config.recipientName ?? 'Alex Mercer';
-  const companyName = config.companyName ?? 'Antigravity Cloud Inc';
+  const brandName = customization.brandName ?? 'Antigravity SaaS';
+  const recipientName = customization.recipientName ?? 'Alex Mercer';
+  const companyName = customization.companyName ?? 'Antigravity Cloud Inc';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
       {/* Header Row */}
       <Row padding="24px 0 16px 0">
         <Column>
-          {config.logoUrl && (
+          {customization.logoUrl && (
             <Image
-              src={config.logoUrl}
+              src={customization.logoUrl}
               alt={brandName}
               width="140px"
             />
@@ -185,7 +185,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
       </Row>
 
       {/* CTA Button Block */}
-      {config.showCTA && (
+      {customization.showCTA && (
         <Row padding="16px 0">
           <Column
             backgroundColor={cardBg}
@@ -214,10 +214,10 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ config, mode = 'email' }) =>
       )}
 
       {/* Footer Section */}
-      {config.showFooter && (
+      {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
-            {config.showSocials && (
+            {customization.showSocials && (
               <Social
                 iconType="circle"
                 iconSize={28}

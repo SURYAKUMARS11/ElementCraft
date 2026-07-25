@@ -28,7 +28,7 @@ export const PreviewStage: React.FC<Props> = ({
   // Generate HTML for a specific mode
   const getRenderedHtmlForMode = (mode: RenderMode) => {
     try {
-      return renderToHtml(<Component config={customization} mode={mode} />, {
+      return renderToHtml(<Component customization={customization} mode={mode} />, {
         title: `${template.name} - Built with Elements`,
         mode: mode,
       });

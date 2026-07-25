@@ -64,7 +64,9 @@ export const StudioWorkspace: React.FC<Props> = ({
 
   const getRenderedHtml = (mode: RenderMode) => {
     try {
-      return renderToHtml(<Component config={customization} mode={mode} />, {
+      // Note: Passing customization={customization} so @unlayer/react-elements's internal React.cloneElement
+      // does not overwrite our custom props with its internal engine { mode: "web", cdnBaseUrl: "..." } config!
+      return renderToHtml(<Component customization={customization} mode={mode} />, {
         title: selectedTemplate.name,
         mode: mode,
       });

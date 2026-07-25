@@ -36,6 +36,6 @@ export interface TemplateDefinition {
   badge: string;
   recommendedMode: RenderMode;
   defaultCustomization: TemplateCustomization;
-  component: React.ComponentType<{ config: TemplateCustomization; mode?: RenderMode }>;
-  getRawJsx: (config: TemplateCustomization) => string;
+  component: React.ComponentType<{ customization: TemplateCustomization; mode?: RenderMode }>;
+  getRawJsx: (customization: TemplateCustomization) => string;
 }

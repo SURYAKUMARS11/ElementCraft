@@ -13,21 +13,21 @@ import {
 import type { TemplateCustomization, RenderMode } from '../types/template';
 
 interface Props {
-  config: TemplateCustomization;
+  customization: TemplateCustomization;
   mode?: RenderMode;
 }
 
-export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' }) => {
+export const TechPulseNewsletter: React.FC<Props> = ({ customization, mode = 'email' }) => {
   const Container = mode === 'document' ? Body : Email;
-  const isDark = Boolean(config.darkMode);
+  const isDark = Boolean(customization.darkMode);
 
-  const bgColor = config.backgroundColor ?? (isDark ? '#090d16' : '#f3f4f6');
+  const bgColor = customization.backgroundColor ?? (isDark ? '#090d16' : '#f3f4f6');
   const cardBg = isDark ? '#111827' : '#ffffff';
-  const textColor = config.textColor ?? (isDark ? '#f9fafb' : '#111827');
+  const textColor = customization.textColor ?? (isDark ? '#f9fafb' : '#111827');
   const textMuted = isDark ? '#9ca3af' : '#4b5563';
-  const primaryColor = config.primaryColor || '#ec4899';
+  const primaryColor = customization.primaryColor || '#ec4899';
 
-  const brandName = config.brandName ?? 'Frontend Pulse';
+  const brandName = customization.brandName ?? 'Frontend Pulse';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="620px" mode={mode}>
@@ -41,7 +41,7 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
             The Frontend Digest
           </Heading>
           <Paragraph color={textMuted} fontSize="14px" textAlign="center">
-            Issue #{config.issueNumber || '42'} • July 2026 • 5 min read
+            Issue #{customization.issueNumber || '42'} • July 2026 • 5 min read
           </Paragraph>
         </Column>
       </Row>
@@ -63,7 +63,7 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
           <Paragraph color={textMuted} fontSize="15px" lineHeight="1.6">
             Building email templates used to mean wrestling with raw table tags or locked visual builders. With <strong>@unlayer/react-elements</strong>, developers write pure React JSX that compiles directly to XHTML tables and responsive web layouts.
           </Paragraph>
-          {config.showCTA && (
+          {customization.showCTA && (
             <Button
               href="https://github.com/unlayer/elements"
               backgroundColor={primaryColor}
@@ -117,10 +117,10 @@ export const TechPulseNewsletter: React.FC<Props> = ({ config, mode = 'email' })
       </Row>
 
       {/* Footer */}
-      {config.showFooter && (
+      {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
-            {config.showSocials && (
+            {customization.showSocials && (
               <Social
                 iconType="circle"
                 iconSize={26}

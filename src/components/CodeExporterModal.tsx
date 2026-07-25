@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { renderToHtml, renderToJson, renderToPlainText } from '@unlayer/react-elements';
 import type { TemplateDefinition, TemplateCustomization, RenderMode } from '../types/template';
-import { X, Copy, Check, Download, Code2, FileCode, Braces, AlignLeft } from 'lucide-react';
+import { X, Copy, Check, FileCode, Code, FileJson, FileText, Download } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const CodeExporterModal: React.FC<Props> = ({
   customization,
   renderMode,
 }) => {
-  // 1. All hooks MUST be declared unconditionally at the very top level of the component
+  // 1. Declare active tab state at top level (unconditional hook)
   const [activeTab, setActiveTab] = useState<'html' | 'jsx' | 'json' | 'text'>('html');
   const [copied, setCopied] = useState(false);
 
@@ -28,7 +28,7 @@ export const CodeExporterModal: React.FC<Props> = ({
   const htmlOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      return renderToHtml(<Component config={customization} mode={renderMode} />, {
+      return renderToHtml(<Component customization={customization} mode={renderMode} />, {
         title: template.name,
         mode: renderMode,
       });
@@ -51,7 +51,7 @@ export const CodeExporterModal: React.FC<Props> = ({
   const jsonOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      const designJson = renderToJson(<Component config={customization} mode={renderMode} />);
+      const designJson = renderToJson(<Component customization={customization} mode={renderMode} />);
       return JSON.stringify(designJson, null, 2);
     } catch (e) {
       return JSON.stringify(
@@ -72,133 +72,115 @@ export const CodeExporterModal: React.FC<Props> = ({
   const textOutput = useMemo(() => {
     if (!isOpen) return '';
     try {
-      return renderToPlainText(<Component config={customization} mode={renderMode} />);
+      return renderToPlainText(<Component customization={customization} mode={renderMode} />);
     } catch (e) {
       return `Error generating plain text MIME: ${String(e)}`;
     }
   }, [isOpen, template, customization, renderMode, Component]);
 
-  // 6. Early return AFTER all hooks have been declared unconditionally
+  // Conditional early return AFTER all hooks have been declared at top level
   if (!isOpen) return null;
 
-  const getCurrentCode = (): string => {
-    switch (activeTab) {
-      case 'html':
-        return htmlOutput || '<!-- No HTML generated -->';
-      case 'jsx':
-        return jsxOutput || '// No JSX generated';
-      case 'json':
-        return jsonOutput || '{}';
-      case 'text':
-        return textOutput || 'No plain text MIME available';
-      default:
-        return htmlOutput || '';
-    }
-  };
+  const currentCode =
+    activeTab === 'html'
+      ? htmlOutput
+      : activeTab === 'jsx'
+      ? jsxOutput
+      : activeTab === 'json'
+      ? jsonOutput
+      : textOutput;
 
   const handleCopy = () => {
-    const code = getCurrentCode();
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(currentCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleDownload = () => {
-    const code = getCurrentCode();
-    const ext = activeTab === 'html' ? 'html' : activeTab === 'json' ? 'json' : activeTab === 'jsx' ? 'tsx' : 'txt';
-    const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+    const ext = activeTab === 'html' ? 'html' : activeTab === 'jsx' ? 'tsx' : activeTab === 'json' ? 'json' : 'txt';
+    const mime = activeTab === 'json' ? 'application/json' : 'text/plain';
+    const blob = new Blob([currentCode], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${template.id}-${activeTab}.${ext}`;
+    a.download = `${template.id}-export.${ext}`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  const currentCode = getCurrentCode();
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-        {/* Modal Header */}
-        <div className="modal-head">
-          <div className="modal-title-group">
-            <Code2 size={22} className="text-purple" />
+    <div className="modal-backdrop-dark" onClick={onClose}>
+      <div className="exporter-drawer-container" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="drawer-header">
+          <div className="header-title-group">
+            <FileCode size={20} className="icon-purple" />
             <div>
-              <h2>Export Center — {template.name}</h2>
-              <span className="modal-sub-label">
-                {activeTab === 'html' && 'Email-Safe XHTML Output'}
-                {activeTab === 'jsx' && 'React Source Component'}
-                {activeTab === 'json' && 'Unlayer JSON Schema'}
-                {activeTab === 'text' && 'Plain Text MIME Fallback'}
-              </span>
+              <h2>Template Export Center</h2>
+              <p className="subtitle">
+                {template.name} • {renderMode.toUpperCase()} Spec
+              </p>
             </div>
           </div>
-          <button className="close-btn" onClick={onClose} title="Close Export Window">
-            <X size={20} />
+          <button className="btn-close-drawer" onClick={onClose}>
+            <X size={18} />
           </button>
         </div>
 
-        {/* Tab Controls */}
-        <div className="modal-nav-tabs">
+        {/* Tab Switcher */}
+        <div className="drawer-tab-bar">
           <button
-            className={`nav-tab-item ${activeTab === 'html' ? 'active' : ''}`}
+            className={`tab-item ${activeTab === 'html' ? 'active' : ''}`}
             onClick={() => setActiveTab('html')}
           >
-            <FileCode size={15} /> Compiled HTML
+            <Code size={15} /> HTML Output
           </button>
-
           <button
-            className={`nav-tab-item ${activeTab === 'jsx' ? 'active' : ''}`}
+            className={`tab-item ${activeTab === 'jsx' ? 'active' : ''}`}
             onClick={() => setActiveTab('jsx')}
           >
-            <Code2 size={15} /> React Source JSX
+            <FileCode size={15} /> React JSX Source
           </button>
-
           <button
-            className={`nav-tab-item ${activeTab === 'json' ? 'active' : ''}`}
+            className={`tab-item ${activeTab === 'json' ? 'active' : ''}`}
             onClick={() => setActiveTab('json')}
           >
-            <Braces size={15} /> Unlayer JSON
+            <FileJson size={15} /> Unlayer JSON Schema
           </button>
-
           <button
-            className={`nav-tab-item ${activeTab === 'text' ? 'active' : ''}`}
+            className={`tab-item ${activeTab === 'text' ? 'active' : ''}`}
             onClick={() => setActiveTab('text')}
           >
-            <AlignLeft size={15} /> Plain Text MIME
+            <FileText size={15} /> Plain Text MIME
           </button>
         </div>
 
-        {/* Code Viewport Box */}
-        <div className="modal-code-area">
-          <div className="code-editor-top-bar">
-            <span className="code-lang-tag">{activeTab.toUpperCase()} OUTPUT</span>
-            <span className="code-size-tag">{currentCode.length} characters</span>
+        {/* Code Content Viewport */}
+        <div className="drawer-code-body">
+          <div className="code-toolbar">
+            <span className="file-tag">
+              {activeTab === 'html'
+                ? 'compiled-output.html'
+                : activeTab === 'jsx'
+                ? `${template.id}.tsx`
+                : activeTab === 'json'
+                ? 'design-schema.json'
+                : 'plain-text.txt'}
+            </span>
+            <div className="action-buttons">
+              <button className="btn-tool-action" onClick={handleDownload}>
+                <Download size={14} /> Download File
+              </button>
+              <button className="btn-tool-action primary" onClick={handleCopy}>
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? 'Copied to Clipboard!' : 'Copy Snippet'}
+              </button>
+            </div>
           </div>
-          <pre className="code-pre">
-            <code className="code-text-content">{currentCode}</code>
+
+          <pre className="code-editor-viewport">
+            <code>{currentCode}</code>
           </pre>
-        </div>
-
-        {/* Modal Footer */}
-        <div className="modal-foot">
-          <div className="footer-info">
-            {activeTab === 'html' && '✅ XHTML Table markup ready for SendGrid, Mailchimp, Outlook & Gmail.'}
-            {activeTab === 'jsx' && '⚡ Modular React component powered by @unlayer/react-elements.'}
-            {activeTab === 'json' && '📊 Compatible with Unlayer Drag & Drop visual editor schema.'}
-            {activeTab === 'text' && '✉️ Multipart plain text MIME part for email deliverability.'}
-          </div>
-
-          <div className="action-btns">
-            <button className="btn-secondary-act" onClick={handleDownload}>
-              <Download size={15} /> Download File
-            </button>
-            <button className="btn-primary-act" onClick={handleCopy}>
-              {copied ? <Check size={15} /> : <Copy size={15} />}
-              {copied ? 'Copied!' : 'Copy Code'}
-            </button>
-          </div>
         </div>
       </div>
     </div>

@@ -42,7 +42,7 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
 
   const heroHtml = React.useMemo(() => {
     try {
-      return renderToHtml(<Component config={heroCustomization} mode={activeMode} />, {
+      return renderToHtml(<Component customization={heroCustomization} mode={activeMode} />, {
         title: selectedTemplate.name,
         mode: activeMode,
       });
@@ -335,6 +335,7 @@ export const LandingShowcase: React.FC<Props> = ({ onLaunchStudio, onOpenExporte
         </div>
       </section>
 
+      {/* Footer */}
       {/* Footer */}
       <footer className="landing-footer">
         <div className="footer-container">

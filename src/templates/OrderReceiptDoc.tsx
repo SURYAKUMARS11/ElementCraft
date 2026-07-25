@@ -13,26 +13,25 @@ import {
 import type { TemplateCustomization, RenderMode } from '../types/template';
 
 interface Props {
-  config: TemplateCustomization;
+  customization: TemplateCustomization;
   mode?: RenderMode;
 }
 
-export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) => {
+export const OrderReceiptDoc: React.FC<Props> = ({ customization, mode = 'document' }) => {
   const Container = mode === 'email' ? Body : Document;
-  const isDark = Boolean(config.darkMode);
+  const isDark = Boolean(customization.darkMode);
   
-  // Use nullish coalescing (??) so user typed values are never overwritten by falsy OR (||) defaults
-  const bgColor = config.backgroundColor ?? (isDark ? '#0f172a' : '#f1f5f9');
+  const bgColor = customization.backgroundColor ?? (isDark ? '#0f172a' : '#f1f5f9');
   const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = config.textColor ?? (isDark ? '#f8fafc' : '#0f172a');
+  const textColor = customization.textColor ?? (isDark ? '#f8fafc' : '#0f172a');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
-  const primaryColor = config.primaryColor || '#059669';
+  const primaryColor = customization.primaryColor || '#059669';
 
-  const brandName = config.brandName ?? 'Acme Corp';
-  const recipientName = config.recipientName ?? 'Alex Mercer';
-  const companyName = config.companyName ?? 'Apex Technologies LLC';
-  const invoiceNumber = config.invoiceNumber ?? 'INV-2026-8842';
-  const totalAmount = config.totalAmount ?? '$2,450.00';
+  const brandName = customization.brandName ?? 'Acme Corp';
+  const recipientName = customization.recipientName ?? 'Alex Mercer';
+  const companyName = customization.companyName ?? 'Apex Technologies LLC';
+  const invoiceNumber = customization.invoiceNumber ?? 'INV-2026-8842';
+  const totalAmount = customization.totalAmount ?? '$2,450.00';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="680px" mode={mode}>
@@ -152,7 +151,7 @@ export const OrderReceiptDoc: React.FC<Props> = ({ config, mode = 'document' }) 
       </Row>
 
       {/* Footer Legal */}
-      {config.showFooter && (
+      {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
             <Paragraph color={textMuted} fontSize="12px" textAlign="center">

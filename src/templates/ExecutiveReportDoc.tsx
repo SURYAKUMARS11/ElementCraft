@@ -12,21 +12,21 @@ import {
 import type { TemplateCustomization, RenderMode } from '../types/template';
 
 interface Props {
-  config: TemplateCustomization;
+  customization: TemplateCustomization;
   mode?: RenderMode;
 }
 
-export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' }) => {
+export const ExecutiveReportDoc: React.FC<Props> = ({ customization, mode = 'document' }) => {
   const Container = mode === 'email' ? Body : Document;
-  const isDark = Boolean(config.darkMode);
+  const isDark = Boolean(customization.darkMode);
 
-  const bgColor = config.backgroundColor ?? (isDark ? '#0b0f19' : '#f8fafc');
+  const bgColor = customization.backgroundColor ?? (isDark ? '#0b0f19' : '#f8fafc');
   const cardBg = isDark ? '#161e2e' : '#ffffff';
-  const textColor = config.textColor ?? (isDark ? '#f1f5f9' : '#0f172a');
+  const textColor = customization.textColor ?? (isDark ? '#f1f5f9' : '#0f172a');
   const textMuted = isDark ? '#94a3b8' : '#64748b';
-  const primaryColor = config.primaryColor || '#2563eb';
+  const primaryColor = customization.primaryColor || '#2563eb';
 
-  const brandName = config.brandName ?? 'Acme Enterprise';
+  const brandName = customization.brandName ?? 'Acme Enterprise';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="700px" mode={mode}>
@@ -130,7 +130,7 @@ export const ExecutiveReportDoc: React.FC<Props> = ({ config, mode = 'document' 
       </Row>
 
       {/* Footer */}
-      {config.showFooter && (
+      {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
             <Paragraph color={textMuted} fontSize="12px" textAlign="center">
