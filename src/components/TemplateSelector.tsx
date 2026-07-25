@@ -1,7 +1,7 @@
 import React from 'react';
 import { TEMPLATES } from '../templates';
 import type { TemplateDefinition } from '../types/template';
-import { Mail, FileText, Sparkles, LayoutGrid } from 'lucide-react';
+import { Mail, FileText, ChevronDown } from 'lucide-react';
 
 interface Props {
   selectedTemplate: TemplateDefinition;
@@ -19,57 +19,40 @@ export const TemplateSelector: React.FC<Props> = ({
   );
 
   return (
-    <div className="template-bar">
-      <div className="category-filter-tabs">
-        <div className="filter-left">
-          <button
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
-          >
-            <Sparkles size={14} /> All Presets ({TEMPLATES.length})
-          </button>
-
-          <button
-            className={`filter-btn ${filter === 'email' ? 'active' : ''}`}
-            onClick={() => setFilter('email')}
-          >
-            <Mail size={14} /> Emails (3)
-          </button>
-
-          <button
-            className={`filter-btn ${filter === 'document' ? 'active' : ''}`}
-            onClick={() => setFilter('document')}
-          >
-            <FileText size={14} /> Documents (2)
-          </button>
-        </div>
-
-        <div className="renderer-info-pill">
-          <LayoutGrid size={14} /> Select a template to edit &amp; render in real-time
+    <div className="compact-template-bar">
+      <div className="compact-bar-left">
+        <span className="bar-label">SELECT TEMPLATE:</span>
+        <div className="preset-pill-group">
+          {filteredTemplates.map((t) => {
+            const isSelected = selectedTemplate.id === t.id;
+            return (
+              <button
+                key={t.id}
+                className={`compact-tpl-pill ${isSelected ? 'active' : ''}`}
+                onClick={() => onSelectTemplate(t)}
+              >
+                {t.category === 'email' ? <Mail size={12} /> : <FileText size={12} />}
+                <span>{t.name}</span>
+                <span className="pill-badge">{t.badge}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="template-card-grid">
-        {filteredTemplates.map((t) => {
-          const isSelected = selectedTemplate.id === t.id;
-          return (
-            <button
-              key={t.id}
-              className={`tpl-card ${isSelected ? 'active' : ''}`}
-              onClick={() => onSelectTemplate(t)}
-            >
-              <div className="tpl-card-top">
-                <span className={`cat-pill ${t.category}`}>
-                  {t.category === 'email' ? <Mail size={11} /> : <FileText size={11} />}
-                  {t.category.toUpperCase()}
-                </span>
-                <span className="tpl-badge">{t.badge}</span>
-              </div>
-              <h3 className="tpl-title">{t.name}</h3>
-              <p className="tpl-desc">{t.description}</p>
-            </button>
-          );
-        })}
+      <div className="compact-bar-right">
+        <div className="dropdown-filter-wrap">
+          <select
+            className="filter-select"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as any)}
+          >
+            <option value="all">All Categories ({TEMPLATES.length})</option>
+            <option value="email">Emails Only (3)</option>
+            <option value="document">Documents Only (2)</option>
+          </select>
+          <ChevronDown size={14} className="select-arrow" />
+        </div>
       </div>
     </div>
   );
