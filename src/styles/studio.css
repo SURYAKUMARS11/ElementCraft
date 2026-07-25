@@ -2228,3 +2228,259 @@ html, body, #root {
   word-break: break-all;
 }
 
+/* =========================================================
+   MOBILE RESPONSIVENESS (PHONES & TABLETS)
+   ========================================================= */
+.mobile-menu-btn {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  /* 1. Header Mobile Layout */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-nav-center {
+    display: none;
+  }
+
+  .header-actions {
+    display: none;
+  }
+
+  .header-nav-center.mobile-open {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--bg-surface);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    gap: 8px;
+  }
+
+  .header-actions.mobile-open {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    background: var(--bg-surface);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    position: absolute;
+    top: 240px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* 2. Standalone Studio Mobile Layout */
+  .standalone-studio-header {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .studio-header-left,
+  .studio-header-center,
+  .studio-header-right {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .template-dropdown-wrapper {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .standalone-workspace-body {
+    flex-direction: column;
+  }
+
+  .standalone-inspector-sidebar {
+    width: 100%;
+    max-height: 280px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .standalone-compare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-card-iframe {
+    height: 480px;
+  }
+
+  .single-viewport-container.desktop,
+  .single-viewport-container.mobile {
+    width: 100%;
+  }
+
+  /* 3. Landing Showcase Mobile Layout */
+  .hero-section {
+    padding: 40px 16px 24px 16px;
+  }
+
+  .hero-title {
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .btn-primary-glow,
+  .btn-secondary-glass {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sandbox-header {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .sandbox-controls-right {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sandbox-stage {
+    height: 420px;
+  }
+
+  .feature-cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-template-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .playground-box {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .code-pre-box {
+    font-size: 11px;
+  }
+
+  .submission-banner-section {
+    padding: 0 16px;
+  }
+
+  .banner-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 20px;
+  }
+
+  .banner-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .footer-right {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* 4. Template Suite & Docs Mobile Layout */
+  .gallery-view-container,
+  .docs-view-container {
+    padding: 24px 16px;
+  }
+
+  .gallery-header-block h1,
+  .docs-header h1 {
+    font-size: 26px;
+  }
+
+  .gallery-toolbar-row {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .filter-pill-group {
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .gallery-grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .compliance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 5. Exporter Drawer Mobile Layout */
+  .exporter-drawer-container {
+    width: 98vw;
+    height: 94vh;
+    border-radius: 12px;
+  }
+
+  .drawer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .drawer-tab-bar {
+    flex-wrap: wrap;
+    padding: 0 12px;
+  }
+
+  .tab-item {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+

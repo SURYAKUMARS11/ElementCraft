@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sparkles, ExternalLink, FileCode2, Code, Sun, Moon, Home, Sliders, LayoutGrid, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, ExternalLink, FileCode2, Code, Sun, Moon, Home, Sliders, LayoutGrid, BookOpen, Menu, X } from 'lucide-react';
 
 export type ActiveNavTab = 'landing' | 'studio' | 'gallery' | 'docs';
 
@@ -18,9 +18,16 @@ export const Header: React.FC<Props> = ({
   onToggleTheme,
   onOpenExporter,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (tab: ActiveNavTab) => {
+    onSelectTab(tab);
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="studio-header">
-      <div className="header-brand" onClick={() => onSelectTab('landing')} style={{ cursor: 'pointer' }}>
+      <div className="header-brand" onClick={() => handleNavClick('landing')} style={{ cursor: 'pointer' }}>
         <div className="brand-icon-wrapper">
           <Sparkles size={22} />
         </div>
@@ -34,49 +41,59 @@ export const Header: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* Mobile Menu Hamburger Button */}
+      <button
+        className="mobile-menu-btn"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle Mobile Menu"
+      >
+        {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
       {/* Navigation Tabs */}
-      <nav className="header-nav-center">
+      <nav className={`header-nav-center ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <button
           className={`nav-link ${activeTab === 'landing' ? 'active' : ''}`}
-          onClick={() => onSelectTab('landing')}
+          onClick={() => handleNavClick('landing')}
         >
           <Home size={15} /> Home Showcase
         </button>
 
         <button
           className={`nav-link ${activeTab === 'studio' ? 'active' : ''}`}
-          onClick={() => onSelectTab('studio')}
+          onClick={() => handleNavClick('studio')}
         >
           <Sliders size={15} /> Live Studio Builder
         </button>
 
         <button
           className={`nav-link ${activeTab === 'gallery' ? 'active' : ''}`}
-          onClick={() => onSelectTab('gallery')}
+          onClick={() => handleNavClick('gallery')}
         >
           <LayoutGrid size={15} /> Template Suite
         </button>
 
         <button
           className={`nav-link ${activeTab === 'docs' ? 'active' : ''}`}
-          onClick={() => onSelectTab('docs')}
+          onClick={() => handleNavClick('docs')}
         >
           <BookOpen size={15} /> Specs &amp; Docs
         </button>
       </nav>
 
       {/* Action Controls */}
-      <div className="header-actions">
-        <div className="header-badge-challenge">
-          <Sparkles size={14} className="trophy-gold" />
-          <span>v2.0 Pro</span>
-        </div>
-
+      <div className={`header-actions ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <button className="theme-toggle-btn" onClick={onToggleTheme} title="Toggle Light/Dark Studio">
           {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
         </button>
 
-        <button className="btn-export-trigger" onClick={onOpenExporter}>
+        <button
+          className="btn-export-trigger"
+          onClick={() => {
+            onOpenExporter();
+            setMobileMenuOpen(false);
+          }}
+        >
           <FileCode2 size={16} />
           <span>Export Center</span>
         </button>
