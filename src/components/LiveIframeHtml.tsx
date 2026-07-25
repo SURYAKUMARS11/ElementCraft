@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface LiveIframeProps {
   html: string;
@@ -7,28 +7,21 @@ interface LiveIframeProps {
 }
 
 export const LiveIframeHtml: React.FC<LiveIframeProps> = ({ html, title, className }) => {
-  // Generate Blob URL synchronously on every html update
-  const blobUrl = useMemo(() => {
-    if (!html) return undefined;
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    console.log(`🖼️ [LiveIframeHtml] New Blob URL created for "${title}":`, url, `(html length: ${html.length})`);
-    return url;
-  }, [html, title]);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Clean up Blob URLs on change or unmount
   useEffect(() => {
-    return () => {
-      if (blobUrl) {
-        console.log(`🧹 [LiveIframeHtml] Revoking Blob URL:`, blobUrl);
-        URL.revokeObjectURL(blobUrl);
-      }
-    };
-  }, [blobUrl]);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    console.log(`🚀 [LiveIframeHtml] Programmatically updating srcdoc for "${title}" (length: ${html?.length})`);
+    
+    // Assigning srcdoc programmatically via ref forces browser to re-parse HTML document
+    iframe.srcdoc = html || '';
+  }, [html, title]);
 
   return (
     <iframe
-      src={blobUrl}
+      ref={iframeRef}
       title={title}
       className={className}
       sandbox="allow-popups allow-same-origin allow-scripts allow-forms"
