@@ -39,12 +39,16 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
       {/* Header Row */}
       <Row padding="24px 0 16px 0">
         <Column>
-          {customization.logoUrl && (
+          {customization.logoUrl ? (
             <Image
               src={customization.logoUrl}
               alt={brandName}
               width="140px"
             />
+          ) : (
+            <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
+              ⚡ {brandName}
+            </Heading>
           )}
         </Column>
       </Row>
