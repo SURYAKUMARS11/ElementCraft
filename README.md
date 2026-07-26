@@ -7,13 +7,13 @@
 ## 📸 Application Screenshots & Visual Showcase
 
 ### 1. 🚀 Interactive Landing Showcase & Live Sandbox
-![ElementCraft Studio Landing Page](./public/image.png)
+![ElementCraft Studio Landing Page](./public/Screenshot%202026-07-26%20093215.png)
 
 ### 2. 🎨 Live Studio Builder & Parameter Inspector
-![Live Studio Builder & Parameter Customizer](./public/image%20copy.png)
+![Live Studio Builder & Parameter Customizer](./public/Screenshot%202026-07-26%20093226.png)
 
 ### 3. ⚡ Multi-Renderer Comparison & Template Export Center
-![Multi-Renderer Comparison & Code Exporter](./public/Screenshot%202026-07-25%20201410.png)
+![Multi-Renderer Comparison & Code Exporter](./public/Screenshot%202026-07-26%20093318.png)
 
 ---
 
