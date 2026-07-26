@@ -4,6 +4,19 @@
 
 ---
 
+## 📸 Application Screenshots & Visual Showcase
+
+### 1. 🚀 Interactive Landing Showcase & Live Sandbox
+![ElementCraft Studio Landing Page](./public/image.png)
+
+### 2. 🎨 Live Studio Builder & Parameter Inspector
+![Live Studio Builder & Parameter Customizer](./public/image%20copy.png)
+
+### 3. ⚡ Multi-Renderer Comparison & Template Export Center
+![Multi-Renderer Comparison & Code Exporter](./public/Screenshot%202026-07-25%20201410.png)
+
+---
+
 ## 🌟 Key Application Features
 
 - **🚀 Interactive Showcase Landing Page**:
@@ -52,8 +65,8 @@ Ensure you have **Node.js (v18+)** and **npm** installed on your system.
 
 ### 2. Installation
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/elementcraft-studio.git
-cd elementcraft-studio
+git clone https://github.com/SURYAKUMARS11/ElementCraft.git
+cd ElementCraft
 npm install
 ```
 
