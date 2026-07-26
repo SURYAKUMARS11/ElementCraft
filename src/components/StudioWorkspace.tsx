@@ -234,7 +234,15 @@ export const StudioWorkspace: React.FC<Props> = ({
                     <label className="prop-label">Dark Mode Frame</label>
                     <button
                       className={`toggle-frame-btn ${customization.darkMode ? 'active' : ''}`}
-                      onClick={() => updateProp('darkMode', !customization.darkMode)}
+                      onClick={() => {
+                        const nextDark = !customization.darkMode;
+                        onCustomizationChange({
+                          ...customization,
+                          darkMode: nextDark,
+                          textColor: nextDark ? '#f8fafc' : '#0f172a',
+                          backgroundColor: nextDark ? '#0b0f19' : '#f8fafc',
+                        });
+                      }}
                     >
                       {customization.darkMode ? '🌙 Dark Frame On' : '☀️ Light Frame On'}
                     </button>
@@ -434,6 +442,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     html={getRenderedHtml('web')}
                     title="Web Renderer"
                     className="compare-card-iframe"
+                    scaleMode="fit"
                   />
                 </div>
 
@@ -448,6 +457,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     html={getRenderedHtml('email')}
                     title="Email Renderer"
                     className="compare-card-iframe"
+                    scaleMode="fit"
                   />
                 </div>
 
@@ -462,6 +472,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                     html={getRenderedHtml('document')}
                     title="Document Renderer"
                     className="compare-card-iframe"
+                    scaleMode="fit"
                   />
                 </div>
               </div>
@@ -487,6 +498,7 @@ export const StudioWorkspace: React.FC<Props> = ({
                   html={getRenderedHtml(stageMode as RenderMode)}
                   title="Studio Stage Render"
                   className="viewport-stage-iframe"
+                  scaleMode={deviceFrame === 'mobile' ? 'fit' : 'full'}
                 />
               </div>
             )}

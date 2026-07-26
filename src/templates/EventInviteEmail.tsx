@@ -29,16 +29,16 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
 
   const brandName = customization.brandName ?? 'Elements Summit';
   const recipientName = customization.recipientName ?? 'Alex Mercer';
-  const eventName = customization.eventName ?? 'Global Developers Conference 2026';
+  const eventName = customization.eventName ?? 'Unlayer Elements Global Summit 2026';
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
-      {/* Event Banner Card */}
+      {/* 1. Event Banner Card */}
       <Row padding="24px 0 0 0">
         <Column
           backgroundColor={cardBg}
-          borderRadius="20px"
-          padding="40px 32px"
+          borderRadius="24px"
+          padding="40px 36px"
           border={{
             borderTopWidth: '1px',
             borderTopColor: isDark ? '#3b0764' : '#e9d5ff',
@@ -51,10 +51,10 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
             color={primaryColor}
             fontSize="12px"
             fontWeight="bold"
-            letterSpacing="2px"
+            letterSpacing="3px"
             textAlign="center"
           >
-            ✦ YOU ARE INVITED • EXCLUSIVE VIP ACCESS ✦
+            ✦ YOU ARE INVITED · EXCLUSIVE VIP ACCESS ✦
           </Paragraph>
 
           {/* Event Title */}
@@ -73,7 +73,7 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
           {/* Personal Greeting */}
           <Paragraph
             color={textColor}
-            fontSize="16px"
+            fontSize="15px"
             textAlign="center"
             lineHeight="1.6"
           >
@@ -82,44 +82,47 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
 
           {/* Key Event Details Grid */}
           <Row layout={ColumnLayouts.TwoEqual} padding="24px 0">
-            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="12px" padding="16px">
+            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="14px" padding="18px">
               <Paragraph color={primaryColor} fontSize="11px" fontWeight="bold" letterSpacing="1px">
-                DATE &amp; TIME
+                📅 DATE &amp; TIME
               </Paragraph>
               <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
                 September 14-16, 2026
               </Paragraph>
               <Paragraph color={textMuted} fontSize="12px">
-                09:00 AM PST Daily
+                09:00 AM PST Daily Keynote
               </Paragraph>
             </Column>
 
-            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="12px" padding="16px">
+            <Column backgroundColor={isDark ? '#2e1065' : '#f3e8ff'} borderRadius="14px" padding="18px">
               <Paragraph color={primaryColor} fontSize="11px" fontWeight="bold" letterSpacing="1px">
-                LOCATION / VENUE
+                📍 LOCATION / VENUE
               </Paragraph>
               <Paragraph color={textColor} fontSize="14px" fontWeight="bold">
                 Moscone Center West
               </Paragraph>
               <Paragraph color={textMuted} fontSize="12px">
-                San Francisco, CA &amp; Virtual
+                San Francisco, CA &amp; Virtual Stream
               </Paragraph>
             </Column>
           </Row>
 
-          {/* Ticket Pass Container */}
+          {/* Perforated VIP Ticket Pass Block */}
           <Row padding="0 0 20px 0">
             <Column
               backgroundColor={isDark ? '#2e1065' : '#f3e8ff'}
-              borderRadius="12px"
-              padding="20px"
+              borderRadius="16px"
+              padding="24px"
             >
-              <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" letterSpacing="1px" textAlign="center">
-                PASS CODE: VIP-884-X9
+              <Paragraph color={primaryColor} fontSize="12px" fontWeight="bold" letterSpacing="2px" textAlign="center">
+                🎟️ DIGITAL PASS CODE: VIP-884-X9
               </Paragraph>
-              <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold" textAlign="center">
+              <Heading level="h3" color={textColor} fontSize="18px" fontWeight="bold" textAlign="center" containerPadding="4px 0 0 0">
                 All-Access Keynote &amp; Builder Workshops Pass
               </Heading>
+              <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="4px 0 0 0">
+                Includes VIP Lounge Access, Workshop Materials &amp; Networking Dinners
+              </Paragraph>
             </Column>
           </Row>
 
@@ -129,7 +132,7 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
               href="https://unlayer.com"
               backgroundColor={primaryColor}
               color="#ffffff"
-              borderRadius="10px"
+              borderRadius="12px"
               padding="16px 36px"
               fontSize="16px"
               fontWeight="bold"
@@ -140,22 +143,23 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
         </Column>
       </Row>
 
-      {/* Footer */}
+      {/* 2. Footer */}
       {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
             {customization.showSocials && (
               <Social
                 iconType="circle"
-                iconSize={26}
-                spacing={10}
+                iconSize={28}
+                spacing={12}
                 icons={[
                   { name: 'Twitter', url: 'https://twitter.com' },
                   { name: 'LinkedIn', url: 'https://linkedin.com' },
+                  { name: 'GitHub', url: 'https://github.com' },
                 ]}
               />
             )}
-            <Paragraph color={textMuted} fontSize="12px" textAlign="center">
+            <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="12px 0 0 0">
               Hosted by <strong>{brandName}</strong>. Powered by @unlayer/react-elements.
             </Paragraph>
           </Column>
@@ -165,16 +169,25 @@ export const EventInviteEmail: React.FC<Props> = ({ customization, mode = 'email
   );
 };
 
-export const getEventInviteJsx = (config: TemplateCustomization): string => {
-  return `import { Email, Row, Column, Heading, Paragraph, Button } from '@unlayer/react-elements';
+export const getEventInviteJsx = (c: TemplateCustomization): string => {
+  const isDark = Boolean(c.darkMode);
+  const bgColor = c.backgroundColor || (isDark ? '#090514' : '#faf5ff');
+  const cardBg = isDark ? '#140c2a' : '#ffffff';
+  const textColor = c.textColor || (isDark ? '#f3e8ff' : '#1e1b4b');
+  const textMuted = isDark ? '#a855f7' : '#6b21a8';
+  const primaryColor = c.primaryColor || '#8b5cf6';
+
+  return `import React from 'react';
+import { Email, Row, Column, Heading, Paragraph, Button } from '@unlayer/react-elements';
 
 export const EventInvite = () => (
-  <Email backgroundColor="${config.backgroundColor || '#faf5ff'}" contentWidth="600px">
+  <Email backgroundColor="${bgColor}" contentWidth="600px">
     <Row padding="32px">
-      <Column backgroundColor="#ffffff" borderRadius="20px">
-        <Heading level="h1">${config.eventName || 'Summit 2026'}</Heading>
-        <Paragraph>Dear ${config.recipientName || 'Guest'}, you are invited!</Paragraph>
-        <Button backgroundColor="${config.primaryColor}">Confirm RSVP</Button>
+      <Column backgroundColor="${cardBg}" borderRadius="24px" padding="40px">
+        <Paragraph color="${primaryColor}" fontSize="12px" fontWeight="bold">✦ VIP ACCESS ✦</Paragraph>
+        <Heading level="h1" color="${textColor}">${c.eventName || 'Summit 2026'}</Heading>
+        <Paragraph color="${textMuted}">Dear ${c.recipientName || 'Guest'}, you are invited!</Paragraph>
+        <Button backgroundColor="${primaryColor}">Confirm RSVP</Button>
       </Column>
     </Row>
   </Email>

@@ -23,12 +23,25 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
   const Container = mode === 'document' ? Body : Email;
   const isDark = Boolean(customization.darkMode);
   
-  // Custom color overrides with dark/light fallbacks
-  const bgColor = customization.backgroundColor || (isDark ? '#0f172a' : '#f8fafc');
-  const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = customization.textColor || (isDark ? '#f8fafc' : '#1e293b');
+  // Smart dark mode color resolution
+  const defaultLightBg = '#f4f6fc';
+  const defaultDarkBg = '#0b0f19';
+  const defaultLightText = '#0f172a';
+  const defaultDarkText = '#f8fafc';
+
+  const bgColor = isDark
+    ? (customization.backgroundColor && customization.backgroundColor !== defaultLightBg ? customization.backgroundColor : defaultDarkBg)
+    : (customization.backgroundColor || defaultLightBg);
+
+  const cardBg = isDark ? '#161e2e' : '#ffffff';
+
+  const textColor = isDark
+    ? (customization.textColor && customization.textColor !== defaultLightText ? customization.textColor : defaultDarkText)
+    : (customization.textColor || defaultLightText);
+
   const textMuted = isDark ? '#94a3b8' : '#64748b';
   const primaryColor = customization.primaryColor || '#6366f1';
+  const accentColor = customization.accentColor || '#10b981';
 
   const brandName = customization.brandName ?? 'Antigravity SaaS';
   const recipientName = customization.recipientName ?? 'Alex Mercer';
@@ -36,77 +49,116 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
 
   return (
     <Container backgroundColor={bgColor} contentWidth="600px" mode={mode}>
-      {/* Header Row */}
-      <Row padding="24px 0 16px 0">
+      {/* 1. Header Brand Row */}
+      <Row padding="28px 0 16px 0">
         <Column>
           {customization.logoUrl ? (
             <Image
               src={customization.logoUrl}
               alt={brandName}
-              width="140px"
+              width="150px"
             />
           ) : (
-            <Heading level="h2" color={primaryColor} fontSize="24px" fontWeight="bold">
-              ⚡ {brandName}
-            </Heading>
+            <Row layout={ColumnLayouts.TwoEqual}>
+              <Column>
+                <Heading level="h2" color={primaryColor} fontSize="26px" fontWeight="bold">
+                  ⚡ {brandName}
+                </Heading>
+              </Column>
+              <Column>
+                <Paragraph color={accentColor} fontSize="11px" fontWeight="bold" letterSpacing="1px" textAlign="right">
+                  🟢 SYSTEM ONLINE · PRO
+                </Paragraph>
+              </Column>
+            </Row>
           )}
         </Column>
       </Row>
 
-      {/* Main Hero Card */}
+      {/* 2. Main Hero Showcase Card */}
       <Row padding="0">
         <Column
           backgroundColor={cardBg}
-          borderRadius="16px"
-          padding="40px 32px"
+          borderRadius="20px"
+          padding="40px 36px"
           border={{
-            borderTopWidth: '1px',
-            borderTopColor: isDark ? '#334155' : '#e2e8f0',
+            borderTopWidth: '3px',
+            borderTopColor: primaryColor,
             borderBottomWidth: '1px',
-            borderBottomColor: isDark ? '#334155' : '#e2e8f0',
+            borderBottomColor: isDark ? '#1e293b' : '#e2e8f0',
           }}
         >
-          {/* Badge */}
-          <Heading
-            level="h4"
+          {/* Status Pill Badge */}
+          <Paragraph
             color={primaryColor}
-            fontSize="14px"
+            fontSize="12px"
             fontWeight="bold"
+            letterSpacing="2px"
             textAlign="center"
-            letterSpacing="1px"
           >
-            🚀 WELCOME TO {brandName.toUpperCase()}
-          </Heading>
+            🚀 WELCOME TO THE FUTURE OF SAAS
+          </Paragraph>
 
           {/* Main Title */}
           <Heading
             level="h1"
             color={textColor}
-            fontSize="30px"
+            fontSize="32px"
             fontWeight="bold"
             textAlign="center"
             lineHeight="1.2"
             containerPadding="16px 0 12px 0"
           >
-            Welcome aboard, {recipientName}!
+            Welcome aboard, {recipientName}! 🎉
           </Heading>
 
           {/* Intro Text */}
           <Paragraph
             color={textMuted}
-            fontSize="16px"
+            fontSize="15px"
             lineHeight="1.6"
             textAlign="center"
           >
-            We&apos;re thrilled to have you join <strong>{companyName}</strong>.
-            Your workspace is ready, fully configured, and optimized for speed. Let&apos;s turn your ideas into reality.
+            We&apos;re thrilled to have you join <strong style={{ color: textColor }}>{companyName}</strong>.
+            Your developer workspace is provisioned with high-speed template compilers, zero hydration overhead, and instant API access.
           </Paragraph>
 
-          {/* Divider */}
+          {/* Developer Quickstart Key Box */}
+          <Row padding="24px 0 0 0">
+            <Column
+              backgroundColor={isDark ? '#0d1117' : '#f8fafc'}
+              borderRadius="14px"
+              padding="20px 24px"
+              border={{
+                borderTopWidth: '2px',
+                borderTopColor: accentColor,
+              }}
+            >
+              <Row layout={ColumnLayouts.TwoEqual}>
+                <Column>
+                  <Paragraph color={accentColor} fontSize="11px" fontWeight="bold" letterSpacing="1.5px">
+                    🔑 PRODUCTION API KEY:
+                  </Paragraph>
+                </Column>
+                <Column>
+                  <Paragraph color="#f59e0b" fontSize="11px" fontWeight="bold" textAlign="right">
+                    ⚡ ACTIVE · US-EAST-1
+                  </Paragraph>
+                </Column>
+              </Row>
+              <Heading level="h4" color={textColor} fontSize="14px" fontWeight="bold" containerPadding="4px 0">
+                sk_live_994827104958291048_prod
+              </Heading>
+              <Paragraph color={textMuted} fontSize="12px">
+                CLI Command: <code style={{ color: primaryColor, fontWeight: 'bold' }}>npx create-elementcraft-app@latest</code>
+              </Paragraph>
+            </Column>
+          </Row>
+
           <Divider
             border={{
               borderTopWidth: '1px',
-              borderTopColor: isDark ? '#334155' : '#f1f5f9',
+              borderTopColor: isDark ? '#1e293b' : '#f1f5f9',
               borderTopStyle: 'solid',
             }}
             containerPadding="24px 0"
@@ -116,91 +168,95 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
           <Heading
             level="h3"
             color={textColor}
-            fontSize="20px"
+            fontSize="18px"
             fontWeight="bold"
             textAlign="center"
           >
-            What you can build with us:
+            🌟 Built-in Platform Capabilities:
           </Heading>
         </Column>
       </Row>
 
-      {/* 3-Column Feature Cards */}
+      {/* 3. Three Feature Cards */}
       <Row layout={ColumnLayouts.ThreeEqual} padding="16px 0">
         <Column
           backgroundColor={cardBg}
-          borderRadius="12px"
-          padding="20px 16px"
+          borderRadius="14px"
+          padding="22px 18px"
           border={{
-            borderTopWidth: '1px',
-            borderTopColor: isDark ? '#334155' : '#e2e8f0',
+            borderTopWidth: '2px',
+            borderTopColor: primaryColor,
           }}
         >
-          <Heading level="h4" color={primaryColor} fontSize="24px" textAlign="center">
+          <Heading level="h4" color={primaryColor} fontSize="28px" textAlign="center">
             ⚡
           </Heading>
-          <Heading level="h4" color={textColor} fontSize="16px" fontWeight="bold" textAlign="center">
+          <Heading level="h4" color={textColor} fontSize="15px" fontWeight="bold" textAlign="center">
             Instant Setup
           </Heading>
-          <Paragraph color={textMuted} fontSize="13px" textAlign="center" lineHeight="1.5">
+          <Paragraph color={textMuted} fontSize="12px" textAlign="center" lineHeight="1.5">
             Deploy full-stack applications with pre-configured elements in seconds.
           </Paragraph>
         </Column>
 
         <Column
           backgroundColor={cardBg}
-          borderRadius="12px"
-          padding="20px 16px"
+          borderRadius="14px"
+          padding="22px 18px"
           border={{
-            borderTopWidth: '1px',
-            borderTopColor: isDark ? '#334155' : '#e2e8f0',
+            borderTopWidth: '2px',
+            borderTopColor: accentColor,
           }}
         >
-          <Heading level="h4" color={primaryColor} fontSize="24px" textAlign="center">
+          <Heading level="h4" color={accentColor} fontSize="28px" textAlign="center">
             🎨
           </Heading>
-          <Heading level="h4" color={textColor} fontSize="16px" fontWeight="bold" textAlign="center">
+          <Heading level="h4" color={textColor} fontSize="15px" fontWeight="bold" textAlign="center">
             Clean JSX APIs
           </Heading>
-          <Paragraph color={textMuted} fontSize="13px" textAlign="center" lineHeight="1.5">
+          <Paragraph color={textMuted} fontSize="12px" textAlign="center" lineHeight="1.5">
             Write modular React code that compiles into email-safe HTML &amp; PDF specs.
           </Paragraph>
         </Column>
 
         <Column
           backgroundColor={cardBg}
-          borderRadius="12px"
-          padding="20px 16px"
+          borderRadius="14px"
+          padding="22px 18px"
           border={{
-            borderTopWidth: '1px',
-            borderTopColor: isDark ? '#334155' : '#e2e8f0',
+            borderTopWidth: '2px',
+            borderTopColor: '#f59e0b',
           }}
         >
-          <Heading level="h4" color={primaryColor} fontSize="24px" textAlign="center">
+          <Heading level="h4" color="#f59e0b" fontSize="28px" textAlign="center">
             📊
           </Heading>
-          <Heading level="h4" color={textColor} fontSize="16px" fontWeight="bold" textAlign="center">
+          <Heading level="h4" color={textColor} fontSize="15px" fontWeight="bold" textAlign="center">
             Real-Time Sync
           </Heading>
-          <Paragraph color={textMuted} fontSize="13px" textAlign="center" lineHeight="1.5">
+          <Paragraph color={textMuted} fontSize="12px" textAlign="center" lineHeight="1.5">
             Seamlessly import or export JSON schema with Unlayer visual editors.
           </Paragraph>
         </Column>
       </Row>
 
-      {/* CTA Button Block */}
+      {/* 4. CTA Button Block */}
       {customization.showCTA && (
         <Row padding="16px 0">
           <Column
             backgroundColor={cardBg}
-            borderRadius="16px"
-            padding="32px 24px"
+            borderRadius="20px"
+            padding="36px 28px"
+            border={{
+              borderTopWidth: '1px',
+              borderTopColor: isDark ? '#1e293b' : '#e2e8f0',
+            }}
           >
             <Heading level="h3" color={textColor} fontSize="22px" fontWeight="bold" textAlign="center">
-              Ready to launch your first template?
+              🚀 Ready to launch your first template?
             </Heading>
-            <Paragraph color={textMuted} fontSize="15px" textAlign="center" containerPadding="8px 0 20px 0">
-              Access your dashboard to customize themes, manage assets, and trigger webhooks.
+            <Paragraph color={textMuted} fontSize="14px" textAlign="center" containerPadding="8px 0 20px 0">
+              Access your developer dashboard to manage API keys, webhooks, and template themes.
             </Paragraph>
             <Button
               href="https://unlayer.com"
@@ -208,16 +264,16 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
               color="#ffffff"
               fontSize="16px"
               fontWeight="bold"
-              borderRadius="8px"
-              padding="14px 28px"
+              borderRadius="10px"
+              padding="14px 32px"
             >
-              Launch Dashboard →
+              Launch Developer Dashboard →
             </Button>
           </Column>
         </Row>
       )}
 
-      {/* Footer Section */}
+      {/* 5. Footer Section */}
       {customization.showFooter && (
         <Row padding="24px 0">
           <Column>
@@ -235,7 +291,7 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
             )}
             <Paragraph color={textMuted} fontSize="12px" textAlign="center" containerPadding="16px 0 0 0">
               © 2026 {companyName}. All rights reserved.<br />
-              Sent with ❤️ using @unlayer/react-elements.<br />
+              Powered by @unlayer/react-elements.<br />
               <a href="#unsubscribe" style={{ color: textMuted, textDecoration: 'underline' }}>
                 Unsubscribe
               </a>{' '}
@@ -253,59 +309,22 @@ export const SaaSWelcomeEmail: React.FC<Props> = ({ customization, mode = 'email
 
 export const getSaaSWelcomeJsx = (c: TemplateCustomization): string => {
   const isDark = Boolean(c.darkMode);
-  const bgColor = c.backgroundColor || (isDark ? '#0f172a' : '#f8fafc');
-  const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = c.textColor || (isDark ? '#f8fafc' : '#1e293b');
-  const textMuted = isDark ? '#94a3b8' : '#64748b';
+  const bgColor = isDark ? '#0b0f19' : '#f4f6fc';
+  const cardBg = isDark ? '#161e2e' : '#ffffff';
+  const textColor = isDark ? '#f8fafc' : '#0f172a';
   const primaryColor = c.primaryColor || '#6366f1';
 
   return `import React from 'react';
-import { Email, Row, Column, Heading, Paragraph, Button, Divider, Social, ColumnLayouts } from '@unlayer/react-elements';
+import { Email, Row, Column, Heading, Paragraph, Button } from '@unlayer/react-elements';
 
 export const SaaSWelcomeEmail = () => (
   <Email backgroundColor="${bgColor}" contentWidth="600px">
-    <Row padding="24px 0 16px 0">
-      <Column>
-        <Heading level="h2" color="${primaryColor}" fontSize="24px" fontWeight="bold">
-          ⚡ ${c.brandName || 'Antigravity SaaS'}
-        </Heading>
+    <Row padding="28px 0 16px 0">
+      <Column backgroundColor="${cardBg}" borderRadius="20px" padding="40px 36px">
+        <Heading level="h1" color="${textColor}">Welcome aboard, ${c.recipientName || 'Developer'}!</Heading>
+        <Button backgroundColor="${primaryColor}">Launch Dashboard →</Button>
       </Column>
     </Row>
-    <Row>
-      <Column backgroundColor="${cardBg}" borderRadius="16px" padding="40px 32px">
-        <Heading level="h4" color="${primaryColor}" fontSize="14px" fontWeight="bold" textAlign="center">
-          🚀 WELCOME TO ${(c.brandName || 'ANTIGRAVITY').toUpperCase()}
-        </Heading>
-        <Heading level="h1" color="${textColor}" fontSize="30px" fontWeight="bold" textAlign="center">
-          Welcome aboard, ${c.recipientName || 'Developer'}!
-        </Heading>
-        <Paragraph color="${textMuted}" fontSize="16px" textAlign="center">
-          We're thrilled to have you join <strong>${c.companyName || 'Antigravity Cloud Inc'}</strong>.
-        </Paragraph>
-        <Divider containerPadding="24px 0" />
-      </Column>
-    </Row>
-    <Row layout={ColumnLayouts.ThreeEqual} padding="16px 0">
-      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
-        <Heading level="h4" color="${primaryColor}" textAlign="center">⚡</Heading>
-        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Instant Setup</Heading>
-      </Column>
-      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
-        <Heading level="h4" color="${primaryColor}" textAlign="center">🎨</Heading>
-        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Clean JSX APIs</Heading>
-      </Column>
-      <Column backgroundColor="${cardBg}" borderRadius="12px" padding="20px 16px">
-        <Heading level="h4" color="${primaryColor}" textAlign="center">📊</Heading>
-        <Heading level="h4" color="${textColor}" fontSize="16px" fontWeight="bold" textAlign="center">Real-Time Sync</Heading>
-      </Column>
-    </Row>
-    ${c.showCTA ? `<Row padding="16px 0">
-      <Column backgroundColor="${cardBg}" borderRadius="16px" padding="32px 24px">
-        <Button href="https://unlayer.com" backgroundColor="${primaryColor}" color="#ffffff" borderRadius="8px" padding="14px 28px">
-          Launch Dashboard →
-        </Button>
-      </Column>
-    </Row>` : ''}
   </Email>
 );`;
 };
